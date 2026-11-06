@@ -54,7 +54,8 @@ CREATE TABLE users (
     id             SERIAL PRIMARY KEY,  
     email          VARCHAR(255) NOT NULL UNIQUE,
     password_hash  VARCHAR(255) NOT NULL,
-    display_name   VARCHAR(100),  
+    display_name   VARCHAR(100),
+    avatar_url     TEXT,          -- รูปโปรไฟล์ (data URL png/jpeg/webp) ตั้งผ่าน /api/account/profile
     role           VARCHAR(20) NOT NULL DEFAULT 'user'
                        CHECK (role IN ('admin', 'user')),
     status         VARCHAR(20) NOT NULL DEFAULT 'active'

@@ -85,6 +85,7 @@ model User {
   email        String         @unique @db.VarChar(255)
   passwordHash String         @map("password_hash") @db.VarChar(255)
   displayName  String?        @map("display_name") @db.VarChar(100)
+  avatarUrl    String?        @map("avatar_url") @db.Text
   role         String         @default("user") @db.VarChar(20)
   status       String         @default("active") @db.VarChar(20)
   createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamptz
