@@ -171,6 +171,24 @@ a { color: inherit; }
 .profile-guest .profile-large-avatar { width: 64px; height: 64px; margin-bottom: 5px; font-size: 20px; }
 .profile-guest .button { margin-top: 8px; }
 .profile-page > .back-link { display: inline-block; }
+.avatar { overflow: hidden; }
+.avatar img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.profile-card-heading .profile-large-avatar { width: 72px; height: 72px; font-size: 22px; }
+.profile-avatar-actions { margin-top: 8px; display: flex; gap: 14px; }
+.profile-link-button { padding: 0; border: 0; background: transparent; color: #35352f; font-size: 11px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.profile-link-button:disabled { color: #a5a39d; }
+.profile-details dd { display: flex; align-items: center; }
+.profile-input { width: 100%; min-height: 36px; padding: 8px 10px; border: 1px solid #e2e0da; border-radius: 4px; outline: 0; color: #272722; font-size: 12px; }
+.profile-input:focus { border-color: #8b8b7b; }
+.profile-password { margin: 22px 0 0; padding: 0; display: grid; gap: 12px; border: 0; }
+.profile-password legend { padding: 0; font-size: 14px; font-weight: 600; }
+.profile-password > p { margin: 4px 0 2px; color: #77766f; font-size: 11px; }
+.profile-password .form-field { font-size: 11px; }
+.profile-password .form-field input { min-height: 38px; font-size: 12px; }
+.profile-error { margin-top: 16px; padding: 10px 12px; border-radius: 4px; background: #fbeee8; color: #a4472a; font-size: 11px; }
+.profile-actions { flex-wrap: wrap; }
+.profile-actions .profile-logout { margin-right: auto; }
+.profile-actions .button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 .login-page { min-height: 100vh; display: grid; grid-template-columns: minmax(400px, .92fr) 1.08fr; background: white; }
 .login-card { width: min(390px, 82%); margin: auto; padding: 55px 0; }
 .login-brand { margin-bottom: 65px; }

@@ -56,3 +56,6 @@ export type LoginResponse = {
   user: AuthUser;
   demo: boolean;
 };
+
+/** The signed-in user's own profile (GET/PATCH /api/account/profile). */
+export type UserProfile = AuthUser & { avatar_url: string | null };

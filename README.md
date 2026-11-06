@@ -45,6 +45,7 @@ Project 385 new/
         ├── routes/
         │   ├── public/  # GET /api/health, /api/catalog, /api/mock/retailers
         │   ├── user/    # POST /api/auth/register, /login, GET /me
+        │   │            # GET/PATCH /api/account/profile (ชื่อ + รูปโปรไฟล์), POST /api/account/password
         │   └── admin/   # /api/admin/*  (ตรวจสิทธิ์ admin ใน index.ts)
         ├── middleware/  # requireUser / requireAdmin, rate limit, error handler
         ├── validators/  # Zod schemas
@@ -59,9 +60,10 @@ Project 385 new/
 | พอร์ต dev | 5173 | 5174 |
 | บัญชี | สมัครเองได้ ได้ role `user` เสมอ | สร้างจาก env (`DEMO_ADMIN_*`) หรือ `db:seed` เท่านั้น ไม่มีหน้าสมัคร |
 | Session | `sessionStorage` ของเว็บผู้ใช้ | `sessionStorage` แยกของหลังบ้าน (ต้องล็อกอินแยก) |
-| API ที่เรียก | `/api/catalog`, `/api/auth/*` | `/api/auth/login`, `/api/admin/*` |
+| API ที่เรียก | `/api/catalog`, `/api/auth/*`, `/api/account/*` | `/api/auth/login`, `/api/admin/*` |
 
 - ทั้งสองแอปเรียก backend ตัวเดียวกันผ่าน Vite proxy `/api` → `localhost:3001`
+- หน้าโปรไฟล์ (เว็บผู้ใช้): แก้ชื่อที่แสดง, เปลี่ยน/ลบรูปโปรไฟล์ (ย่อเป็น 256×256 JPEG ก่อนส่ง, backend รับเฉพาะ PNG/JPEG/WebP data URL ≤ 150,000 ตัวอักษร) และเปลี่ยนรหัสผ่านโดยต้องกรอกรหัสผ่านเดิม (ยังไม่มีการยืนยันทางอีเมล) `/api/account/*` แก้ได้เฉพาะบัญชีของ token ที่ล็อกอิน แก้ email/role/status ไม่ได้ ในโหมด in-memory ข้อมูลรูปและรหัสผ่านใหม่หายเมื่อรีสตาร์ต API
 - สิทธิ์ admin ตรวจที่ backend ทุกคำขอ (`middleware/auth.ts`) การเช็ก role ในหน้า admin login มีไว้แค่แสดงข้อความให้ผู้ใช้
 - ปุ่ม "จัดการระบบ" ในเว็บผู้ใช้ลิงก์ไปที่ `VITE_ADMIN_URL` (ค่าเริ่มต้น `http://localhost:5174`) และปุ่ม "ดูหน้าเว็บไซต์" ในหลังบ้านลิงก์ไปที่ `VITE_SITE_URL` (ค่าเริ่มต้น `http://localhost:5173`)
 

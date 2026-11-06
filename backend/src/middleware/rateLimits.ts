@@ -6,3 +6,5 @@ const common = { windowMs, standardHeaders: "draft-8", legacyHeaders: false } as
 export const apiLimiter = rateLimit({ ...common, limit: 600 });
 export const authLimiter = rateLimit({ ...common, limit: 30 });
 export const adminLimiter = rateLimit({ ...common, limit: 120 });
+// Changing the password verifies the current one, so it is limited like a login attempt.
+export const passwordChangeLimiter = rateLimit({ ...common, limit: 10 });

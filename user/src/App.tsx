@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { getProfile } from "./api/account.api";
 import { getCatalog } from "./api/catalog.api";
 import SiteHeader from "./components/SiteHeader";
 import Toast from "./components/Toast";
@@ -8,9 +9,9 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import PriceSourcesPage from "./pages/PriceSourcesPage";
 import ProfilePage from "./pages/ProfilePage";
-import type { AuthUser, CatalogData, Category } from "./types/models";
-import { apiErrorMessage } from "./utils/errors";
-import { clearSession, readAuthUser, saveSession } from "./utils/session";
+import type { AuthUser, CatalogData, Category, UserProfile } from "./types/models";
+import { apiErrorMessage, isUnauthorized } from "./utils/errors";
+import { clearSession, readAuthUser, saveSession, updateSessionUser } from "./utils/session";
 
 type Screen = "home" | "compare" | "sources" | "profile" | "login";
 
@@ -38,6 +39,37 @@ export default function App() {
     });
     return () => { active = false; };
   }, []);
+
+  // The profile (with avatar) is loaded from the API for whoever the session token belongs to.
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profileError, setProfileError] = useState("");
+  const sessionUserId = authUser?.id;
+  useEffect(() => {
+    setProfile(null);
+    setProfileError("");
+    if (!sessionUserId) return;
+    let active = true;
+    getProfile().then((loaded) => {
+      if (active) setProfile(loaded);
+    }).catch((error: unknown) => {
+      if (!active) return;
+      if (isUnauthorized(error)) {
+        clearSession();
+        setAuthUser(null);
+        setNotice("เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่");
+        return;
+      }
+      setProfileError(apiErrorMessage(error, "โหลดโปรไฟล์ไม่สำเร็จ"));
+    });
+    return () => { active = false; };
+  }, [sessionUserId]);
+
+  function handleProfileSaved(saved: UserProfile) {
+    const user: AuthUser = { id: saved.id, display_name: saved.display_name, email: saved.email, role: saved.role };
+    setProfile(saved);
+    setAuthUser(user);
+    updateSessionUser(user);
+  }
 
   const selectedProduct = catalog.products.find((product) => product.id === selectedProductId) ?? catalog.products[0];
   const filteredProducts = useMemo(() => catalog.products.filter((product) => {
@@ -81,6 +113,7 @@ export default function App() {
         onSources={() => setScreen("sources")}
         onProfile={() => setScreen("profile")}
         authUser={authUser}
+        avatarUrl={profile?.avatar_url ?? null}
         onLogin={() => authUser ? signOut() : setScreen("login")}
       />
       {screen === "home" ? (
@@ -96,7 +129,16 @@ export default function App() {
       ) : screen === "sources" ? (
         <PriceSourcesPage data={catalog} onCompare={showCompare} />
       ) : screen === "profile" ? (
-        <ProfilePage authUser={authUser} onHome={() => setScreen("home")} onLogin={() => setScreen("login")} onLogout={signOut} />
+        <ProfilePage
+          authUser={authUser}
+          profile={profile}
+          profileError={profileError}
+          onHome={() => setScreen("home")}
+          onLogin={() => setScreen("login")}
+          onLogout={signOut}
+          onProfileSaved={handleProfileSaved}
+          onNotice={setNotice}
+        />
       ) : selectedProduct ? (
         <ComparePage
           product={selectedProduct}

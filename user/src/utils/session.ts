@@ -30,3 +30,8 @@ export function clearSession(): void {
   sessionStorage.removeItem(userKey);
   sessionStorage.removeItem(tokenKey);
 }
+
+/** Refresh the display copy of the user after a profile change, keeping the current token. */
+export function updateSessionUser(user: AuthUser): void {
+  if (readToken()) sessionStorage.setItem(userKey, JSON.stringify(user));
+}

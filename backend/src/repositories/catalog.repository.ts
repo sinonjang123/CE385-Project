@@ -40,7 +40,7 @@ export async function getAdminData(): Promise<AdminData> {
   if (prisma) {
     const [{ products, offers }, users] = await Promise.all([
       loadProductsAndOffers(),
-      prisma.user.findMany({ orderBy: { createdAt: "desc" } }),
+      prisma.user.findMany({ orderBy: { createdAt: "desc" }, omit: { avatarUrl: true } }),
     ]);
     return { products, offers, users: users.map((user) => toUser(user)) };
   }

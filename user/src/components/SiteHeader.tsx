@@ -1,14 +1,15 @@
 import type { AuthUser } from "../types/models";
-import { initials } from "../utils/format";
+import Avatar from "./Avatar";
 
 // The admin back office is a separate app (see /admin). Its URL is configurable per environment.
 const adminUrl = import.meta.env.VITE_ADMIN_URL ?? "http://localhost:5174";
 
-export default function SiteHeader({ onHome, onSources, onProfile, authUser, onLogin }: {
+export default function SiteHeader({ onHome, onSources, onProfile, authUser, avatarUrl, onLogin }: {
   onHome: () => void;
   onSources: () => void;
   onProfile: () => void;
   authUser: AuthUser | null;
+  avatarUrl: string | null;
   onLogin: () => void;
 }) {
   return (
@@ -23,7 +24,7 @@ export default function SiteHeader({ onHome, onSources, onProfile, authUser, onL
       </nav>
       <div className="header-actions">
         <button className="profile-entry" onClick={onProfile} aria-label="เปิดโปรไฟล์">
-          <span className="header-profile-avatar">{authUser ? initials(authUser.display_name) : "?"}</span>
+          {authUser ? <Avatar className="header-profile-avatar" name={authUser.display_name} src={avatarUrl} /> : <span className="header-profile-avatar">?</span>}
           <span>โปรไฟล์</span>
         </button>
         <button className="login-entry" onClick={onLogin}>{authUser ? "ออกจากระบบ" : "เข้าสู่ระบบ"}</button>

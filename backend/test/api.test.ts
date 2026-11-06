@@ -260,3 +260,92 @@ test("registration, authorization, catalog CRUD, and admin safeguards", async ()
     && entry.entity_id === registered.user.id
   )));
 });
+
+test("signed-in users can update their own profile and change password with the current password", async () => {
+  const registration = await request("/api/auth/register", {
+    method: "POST",
+    body: JSON.stringify({ displayName: "Profile User", email: "profile@example.test", password: "OldPassword123" }),
+  });
+  assert.equal(registration.status, 201);
+  const { accessToken, user } = await registration.json() as { accessToken: string; user: { id: string } };
+  const headers = { Authorization: `Bearer ${accessToken}` };
+
+  assert.equal((await request("/api/account/profile")).status, 401);
+  assert.equal((await request("/api/account/password", { method: "POST", body: "{}" })).status, 401);
+
+  const initial = await request("/api/account/profile", { headers });
+  assert.equal(initial.status, 200);
+  assert.deepEqual(await initial.json(), {
+    user: { id: user.id, display_name: "Profile User", email: "profile@example.test", role: "user", avatar_url: null },
+  });
+
+  const avatar = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGD4DwABBAEAwS2OUAAAAABJRU5ErkJggg==";
+  const updated = await request("/api/account/profile", {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify({ displayName: "  Renamed User  ", avatarUrl: avatar }),
+  });
+  assert.equal(updated.status, 200);
+  const updatedBody = await updated.json() as { user: { display_name: string; avatar_url: string; role: string } };
+  assert.equal(updatedBody.user.display_name, "Renamed User");
+  assert.equal(updatedBody.user.avatar_url, avatar);
+  assert.equal(updatedBody.user.role, "user");
+
+  const svgAvatar = await request("/api/account/profile", {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify({ displayName: "Renamed User", avatarUrl: "data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=" }),
+  });
+  assert.equal(svgAvatar.status, 400);
+
+  const roleEscalation = await request("/api/account/profile", {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify({ displayName: "Renamed User", avatarUrl: null, role: "admin" }),
+  });
+  assert.equal(roleEscalation.status, 400);
+
+  const oversized = await request("/api/account/profile", {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify({ displayName: "Renamed User", avatarUrl: `data:image/png;base64,${"A".repeat(300_000)}` }),
+  });
+  assert.equal(oversized.status, 413);
+
+  const removedAvatar = await request("/api/account/profile", {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify({ displayName: "Renamed User", avatarUrl: null }),
+  });
+  assert.equal((await removedAvatar.json() as { user: { avatar_url: string | null } }).user.avatar_url, null);
+
+  const wrongCurrent = await request("/api/account/password", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ currentPassword: "WrongPassword123", newPassword: "NewPassword123" }),
+  });
+  assert.equal(wrongCurrent.status, 400);
+  assert.equal((await wrongCurrent.json() as { message: string }).message, "รหัสผ่านปัจจุบันไม่ถูกต้อง");
+
+  const samePassword = await request("/api/account/password", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ currentPassword: "OldPassword123", newPassword: "OldPassword123" }),
+  });
+  assert.equal(samePassword.status, 400);
+
+  const changed = await request("/api/account/password", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ currentPassword: "OldPassword123", newPassword: "NewPassword123" }),
+  });
+  assert.equal(changed.status, 204);
+
+  const oldLogin = await request("/api/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email: "profile@example.test", password: "OldPassword123" }),
+  });
+  assert.equal(oldLogin.status, 401);
+  const newLogin = await login("profile@example.test", "NewPassword123");
+  assert.equal(newLogin.user.role, "user");
+});

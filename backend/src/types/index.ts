@@ -62,3 +62,6 @@ export type AuthPrincipal = {
 };
 
 export type AppUserRecord = AppUserDto & { password_hash: string };
+
+/** The signed-in user's own profile. Never includes the password hash. */
+export type UserProfileDto = AuthPrincipal & { avatar_url: string | null };

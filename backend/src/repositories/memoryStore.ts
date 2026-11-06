@@ -7,4 +7,5 @@ import type { AdminAuditEntry, AdminData } from "../types/index.js";
  */
 export const memory: AdminData = structuredClone(demoData);
 export const memoryPasswords = new Map<string, string>();
+export const memoryAvatars = new Map<string, string>();
 export const memoryAuditLog: AdminAuditEntry[] = [];
