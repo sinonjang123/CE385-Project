@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { ZodError } from "zod";
 import { changePassword, updateProfile } from "../api/account.api";
 import { changePasswordSchema, profileFormSchema } from "../api/schemas";
@@ -60,6 +60,8 @@ function ProfileForm({ profile, onHome, onLogout, onProfileSaved, onNotice }: {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const closeConfirm = useCallback(() => setIsConfirming(false), []);
 
   // Keep the form in sync when the saved profile changes (initial load or after saving).
   useEffect(() => {
@@ -97,21 +99,34 @@ function ProfileForm({ profile, onHome, onLogout, onProfileSaved, onNotice }: {
     }
   }
 
-  async function save(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setErrorMessage("");
+  function validate() {
     const profileValidation = profileFormSchema.safeParse({ displayName, avatarUrl });
     if (!profileValidation.success) {
       setErrorMessage(profileValidation.error.issues[0]?.message ?? "กรุณาตรวจสอบข้อมูลโปรไฟล์");
-      return;
+      return null;
     }
     if (passwordRequested) {
       const passwordValidation = changePasswordSchema.safeParse({ currentPassword, newPassword, confirmPassword });
       if (!passwordValidation.success) {
         setErrorMessage(passwordValidation.error.issues[0]?.message ?? "กรุณาตรวจสอบรหัสผ่าน");
-        return;
+        return null;
       }
     }
+    return profileValidation.data;
+  }
+
+  // Step 1: validate, then ask the user to confirm before anything is sent.
+  function requestSave(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setErrorMessage("");
+    if (validate()) setIsConfirming(true);
+  }
+
+  // Step 2: the user confirmed in the dialog.
+  async function save() {
+    setIsConfirming(false);
+    const profileInput = validate();
+    if (!profileInput) return;
 
     setIsSaving(true);
     let passwordChanged = false;
@@ -123,7 +138,7 @@ function ProfileForm({ profile, onHome, onLogout, onProfileSaved, onNotice }: {
         clearPasswords();
       }
       if (profileChanged) {
-        onProfileSaved(await updateProfile(profileValidation.data));
+        onProfileSaved(await updateProfile(profileInput));
       }
       onNotice(passwordChanged ? "บันทึกการเปลี่ยนแปลงและเปลี่ยนรหัสผ่านแล้ว" : "บันทึกการเปลี่ยนแปลงแล้ว");
     } catch (error) {
@@ -135,7 +150,7 @@ function ProfileForm({ profile, onHome, onLogout, onProfileSaved, onNotice }: {
   }
 
   return (
-    <form className="profile-card" aria-label="แก้ไขโปรไฟล์" onSubmit={save}>
+    <form className="profile-card" aria-label="แก้ไขโปรไฟล์" onSubmit={requestSave}>
       <div className="profile-card-heading">
         <Avatar className="profile-large-avatar" name={displayName.trim() || profile.display_name} src={avatarUrl} />
         <div>
@@ -174,6 +189,42 @@ function ProfileForm({ profile, onHome, onLogout, onProfileSaved, onNotice }: {
         <button type="button" className="button button-outline" onClick={cancel} disabled={!hasChanges || isSaving}>ยกเลิก</button>
         <button type="submit" className="button button-dark" disabled={!hasChanges || isSaving}>{isSaving ? "กำลังบันทึก..." : "บันทึกการเปลี่ยนแปลง"}</button>
       </div>
+
+      {isConfirming && (
+        <ConfirmSaveDialog
+          changes={[
+            displayName.trim() !== profile.display_name && `ชื่อที่แสดง: "${profile.display_name}" → "${displayName.trim()}"`,
+            avatarUrl !== profile.avatar_url && (avatarUrl ? "เปลี่ยนรูปโปรไฟล์" : "ลบรูปโปรไฟล์"),
+            passwordRequested && "เปลี่ยนรหัสผ่าน",
+          ].filter((change): change is string => Boolean(change))}
+          onConfirm={save}
+          onCancel={closeConfirm}
+        />
+      )}
     </form>
+  );
+}
+
+function ConfirmSaveDialog({ changes, onConfirm, onCancel }: { changes: string[]; onConfirm: () => void; onCancel: () => void }) {
+  const confirmButton = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    confirmButton.current?.focus();
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") onCancel(); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [onCancel]);
+
+  return (
+    <div className="confirm-backdrop" onClick={onCancel}>
+      <div className="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-save-title" aria-describedby="confirm-save-list" onClick={(event) => event.stopPropagation()}>
+        <h2 id="confirm-save-title">ยืนยันการบันทึกการเปลี่ยนแปลง?</h2>
+        <ul id="confirm-save-list">{changes.map((change) => <li key={change}>{change}</li>)}</ul>
+        <div className="confirm-actions">
+          <button type="button" className="button button-outline" onClick={onCancel}>ยกเลิก</button>
+          <button type="button" ref={confirmButton} className="button button-dark" onClick={onConfirm}>ยืนยัน</button>
+        </div>
+      </div>
+    </div>
   );
 }

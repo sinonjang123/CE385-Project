@@ -15,3 +15,10 @@ export function storeMark(store: StoreName) {
 export function storeClass(store: StoreName) {
   return store.toLowerCase().replace(/\s+/g, "");
 }
+
+export function dateTime(value: string) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleString("th-TH", { dateStyle: "medium", timeStyle: "short" });
+}

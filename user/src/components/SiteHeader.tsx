@@ -4,7 +4,8 @@ import Avatar from "./Avatar";
 // The admin back office is a separate app (see /admin). Its URL is configurable per environment.
 const adminUrl = import.meta.env.VITE_ADMIN_URL ?? "http://localhost:5174";
 
-export default function SiteHeader({ onHome, onSources, onProfile, authUser, avatarUrl, onLogin }: {
+export default function SiteHeader({ onHome, onSources, onProfile, authUser, avatarUrl, onLogin, showHowItWorks }: {
+  showHowItWorks: boolean;
   onHome: () => void;
   onSources: () => void;
   onProfile: () => void;
@@ -20,7 +21,8 @@ export default function SiteHeader({ onHome, onSources, onProfile, authUser, ava
       <nav className="site-nav" aria-label="เมนูหลัก">
         <button onClick={onHome}>สินค้าทั้งหมด</button>
         <button onClick={onSources}>แหล่งอ้างอิงราคา</button>
-        <a href="#how-it-works">วิธีใช้งาน</a>
+        {/* The "how it works" section only exists on the home page. */}
+        {showHowItWorks && <a href="#how-it-works">วิธีใช้งาน</a>}
       </nav>
       <div className="header-actions">
         <button className="profile-entry" onClick={onProfile} aria-label="เปิดโปรไฟล์">

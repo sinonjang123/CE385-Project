@@ -114,6 +114,7 @@ export default function App() {
         onProfile={() => setScreen("profile")}
         authUser={authUser}
         avatarUrl={profile?.avatar_url ?? null}
+        showHowItWorks={screen === "home"}
         onLogin={() => authUser ? signOut() : setScreen("login")}
       />
       {screen === "home" ? (
