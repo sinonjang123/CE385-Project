@@ -1,0 +1,27 @@
+{
+  "name": "find-this",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "user",
+    "admin",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n API,USER,ADMIN \"npm:dev:api\" \"npm:dev:user\" \"npm:dev:admin\"",
+    "dev:user": "npm --workspace @find-this/user run dev",
+    "dev:admin": "npm --workspace @find-this/admin run dev",
+    "dev:api": "npm --workspace @find-this/api run dev",
+    "build": "npm run build:user && npm run build:admin && npm run build:api",
+    "build:user": "npm --workspace @find-this/user run build",
+    "build:admin": "npm --workspace @find-this/admin run build",
+    "build:api": "npm --workspace @find-this/api run build",
+    "test": "npm --workspace @find-this/api test",
+    "preview:user": "npm --workspace @find-this/user run preview",
+    "preview:admin": "npm --workspace @find-this/admin run preview"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
