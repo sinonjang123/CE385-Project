@@ -50,6 +50,7 @@ Project 385 new/
         │   │            # GET/PATCH /api/account/profile (ชื่อ + รูปโปรไฟล์), POST /api/account/password
         │   │            # สมาชิก: /api/account/favorites, /api/account/searches, GET /api/account/price-history/:productId
         │   └── admin/   # /api/admin/*  (ตรวจสิทธิ์ admin ใน index.ts)
+        │                # GET /api/admin/users/:id/view (View as User แบบอ่านอย่างเดียว)
         ├── middleware/  # requireUser / requireAdmin, rate limit, error handler
         ├── validators/  # Zod schemas
         ├── repositories/# user, catalog, audit
@@ -72,6 +73,8 @@ Project 385 new/
   - **ค้นหาล่าสุด** — บันทึกเมื่อกดค้นหา (ไม่ใช่ทุกตัวอักษร) เก็บ 10 คำล่าสุด ลบทีละคำหรือล้างทั้งหมดได้ (ตาราง `search_history`)
   - **ประวัติราคา 30 วัน** — **ข้อมูลจำลอง** สร้างจาก `services/mockPriceHistory.ts` ให้จุดสุดท้ายตรงกับราคาจำลองปัจจุบัน ไม่ได้อ่านจาก `price_history` เพราะตารางนั้นเก็บราคาที่ admin ตั้ง ไม่ใช่ราคาที่แสดงบนเว็บ (ราคาบนเว็บสุ่มจาก `services/mockRetailers.ts`) ผู้ที่ไม่ได้ล็อกอินจะเห็นการ์ดชวนสมัครแทน
   - ใช้ฐานข้อมูลต้องรัน migration `20261107120000_member_features` (`npx prisma migrate deploy` ใน `backend/`)
+- หลังบ้านเปิดมาที่หน้า **Dashboard**: จำนวนสินค้า/ข้อเสนอ/ผู้ใช้ ส่วนลดเฉลี่ย สินค้าตามหมวด ร้านที่ราคาต่ำสุด ผู้ใช้ล่าสุด และกิจกรรมล่าสุดจาก audit log (ราคาเป็นข้อมูลจำลอง)
+- **View as User** (ปุ่มรูปตาในตาราง App Users และในการ์ดผู้ใช้ล่าสุด): แสดงโปรไฟล์ รายการโปรด และคำค้นล่าสุดของผู้ใช้แบบ**อ่านอย่างเดียว** ไม่ได้ออก token ในนามผู้ใช้และแก้ไขแทนผู้ใช้ไม่ได้ ดูได้เฉพาะบัญชี role `user` ทุกครั้งที่เปิดดูบันทึก audit action `view` และตอบกลับด้วย `Cache-Control: no-store`
 - สิทธิ์ admin ตรวจที่ backend ทุกคำขอ (`middleware/auth.ts`) การเช็ก role ในหน้า admin login มีไว้แค่แสดงข้อความให้ผู้ใช้
 - ปุ่ม "จัดการระบบ" ในเว็บผู้ใช้ลิงก์ไปที่ `VITE_ADMIN_URL` (ค่าเริ่มต้น `http://localhost:5174`) และปุ่ม "ดูหน้าเว็บไซต์" ในหลังบ้านลิงก์ไปที่ `VITE_SITE_URL` (ค่าเริ่มต้น `http://localhost:5173`)
 

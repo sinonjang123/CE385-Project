@@ -4,7 +4,7 @@ import { initials } from "../utils/format";
 import type { AdminPage, DataKind } from "../types/admin";
 import Icon from "./Icon";
 
-export const pageTitles: Record<AdminPage, string> = { overview: "ภาพรวม", users: "App Users", products: "Product", offers: "StoreOffer" };
+export const pageTitles: Record<AdminPage, string> = { overview: "Dashboard", users: "App Users", products: "Product", offers: "StoreOffer" };
 
 /** Admin shell: sidebar + top bar. Page content is passed as children. */
 export default function AdminLayout({ activePage, data, adminUser, demoMode, onPageChange, onAdd, onExit, onLogout, children }: {
@@ -27,7 +27,7 @@ export default function AdminLayout({ activePage, data, adminUser, demoMode, onP
         <button className="brand-lockup admin-brand" onClick={onExit}><span className="brand-mark">f.</span><span>find <strong>THIS</strong><small>ADMIN STUDIO</small></span></button>
         <label className="sidebar-search"><span><Icon name="search" /></span><input placeholder="ค้นหาเมนู..." /></label>
         <div className="sidebar-label">WORKSPACE</div>
-        <button className={`sidebar-link ${activePage === "overview" ? "selected" : ""}`} onClick={() => onPageChange("overview")}><span><Icon name="grid" /></span> Overview</button>
+        <button className={`sidebar-link ${activePage === "overview" ? "selected" : ""}`} onClick={() => onPageChange("overview")}><span><Icon name="grid" /></span> Dashboard</button>
         <button className={`sidebar-link ${activePage === "users" ? "selected" : ""}`} onClick={() => onPageChange("users")}><span><Icon name="user" /></span> App Users <b>{data.users.length}</b></button>
         <div className="sidebar-label data-label">DATA <span>⌄</span></div>
         <button className={`sidebar-link nested ${activePage === "products" ? "selected" : ""}`} onClick={() => onPageChange("products")}><span><Icon name="box" /></span> Product <b>{data.products.length}</b></button>
@@ -51,8 +51,8 @@ export default function AdminLayout({ activePage, data, adminUser, demoMode, onP
           <div className="admin-page-heading">
             <div>
               <div className="eyebrow"><span className="eyebrow-dot" /> ADMIN WORKSPACE</div>
-              <h1>{activePage === "overview" ? "ภาพรวมระบบ" : pageTitles[activePage]}</h1>
-              <p>{activePage === "overview" ? "จัดการข้อมูลสินค้า ข้อเสนอ และผู้ใช้งานของ find THIS" : `จัดการ${activePage === "users" ? "ข้อมูลบัญชีผู้ใช้" : activePage === "products" ? "รายการสินค้า" : "ราคาและข้อเสนอจากร้านค้า"} · ข้อมูลจำลอง`}</p>
+              <h1>{activePage === "overview" ? "Dashboard" : pageTitles[activePage]}</h1>
+              <p>{activePage === "overview" ? "ภาพรวมสินค้า ราคา ผู้ใช้ และกิจกรรมล่าสุดของ find THIS" : `จัดการ${activePage === "users" ? "ข้อมูลบัญชีผู้ใช้" : activePage === "products" ? "รายการสินค้า" : "ราคาและข้อเสนอจากร้านค้า"} · ข้อมูลจำลอง`}</p>
             </div>
             {addKind && onAdd && <button className="button button-dark add-button" onClick={() => onAdd(addKind)}><span>＋</span> เพิ่มรายการ</button>}
           </div>

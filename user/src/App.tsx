@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getProfile } from "./api/account.api";
 import { getCatalog } from "./api/catalog.api";
+import ConfirmDialog from "./components/ConfirmDialog";
 import SiteHeader from "./components/SiteHeader";
 import Toast from "./components/Toast";
 import { seedData } from "./data/seed";
@@ -30,6 +31,8 @@ export default function App() {
   const [category, setCategory] = useState<Category | "ทั้งหมด">("ทั้งหมด");
   const [notice, setNotice] = useState("");
   const clearNotice = useCallback(() => setNotice(""), []);
+  const [confirmingLogout, setConfirmingLogout] = useState(false);
+  const cancelSignOut = useCallback(() => setConfirmingLogout(false), []);
 
   useEffect(() => {
     let active = true;
@@ -107,11 +110,15 @@ export default function App() {
   }
 
   function signOut() {
+    setConfirmingLogout(false);
     clearSession();
     setAuthUser(null);
     setScreen("home");
     setNotice("ออกจากระบบแล้ว");
   }
+
+  // Sign-out buttons ask first; an expired session (401) still signs out immediately.
+  const requestSignOut = () => setConfirmingLogout(true);
 
   function handleLoginSuccess(user: AuthUser, token: string) {
     saveSession(user, token);
@@ -138,7 +145,7 @@ export default function App() {
         authUser={authUser}
         avatarUrl={profile?.avatar_url ?? null}
         showHowItWorks={screen === "home"}
-        onLogin={() => authUser ? signOut() : setScreen("login")}
+        onLogin={() => authUser ? requestSignOut() : setScreen("login")}
       />
       {screen === "home" ? (
         <HomePage
@@ -166,7 +173,7 @@ export default function App() {
           profileError={profileError}
           onHome={() => setScreen("home")}
           onLogin={() => setScreen("login")}
-          onLogout={signOut}
+          onLogout={requestSignOut}
           onProfileSaved={handleProfileSaved}
           onNotice={setNotice}
           favorites={favoriteProducts}
@@ -188,6 +195,15 @@ export default function App() {
           <h2>ยังไม่มีสินค้าให้แสดง</h2>
           <button className="button button-dark" onClick={() => setScreen("home")}>กลับหน้าสินค้า</button>
         </main>
+      )}
+      {confirmingLogout && authUser && (
+        <ConfirmDialog
+          title="ออกจากระบบ?"
+          message={`คุณกำลังจะออกจากระบบบัญชี ${authUser.display_name} รายการโปรดและประวัติการค้นหายังถูกเก็บไว้ในบัญชี`}
+          confirmLabel="ออกจากระบบ"
+          onConfirm={signOut}
+          onCancel={cancelSignOut}
+        />
       )}
       <Toast message={notice} onDone={clearNotice} />
     </div>

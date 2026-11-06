@@ -276,3 +276,78 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .back-link:focus-visible, .login-back:focus-visible { outline: 2px solid #191918; outline-offset: 2px; }
 .back-icon { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px #1a19120f; font-size: 14px; transition: transform .18s ease; }
 .back-link:hover .back-icon, .login-back:hover .back-icon { transform: translateX(-2px); }
+
+/* Dashboard */
+.dashboard-stats { grid-template-columns: repeat(4, 1fr); }
+.dashboard-grid { margin-bottom: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.dashboard-grid .admin-panel { min-height: 0; }
+.bar-list { margin: 16px 0 0; padding: 0; display: grid; gap: 11px; list-style: none; }
+.bar-list li { display: grid; grid-template-columns: 96px 1fr 26px; gap: 10px; align-items: center; font-size: 10px; color: #55544e; }
+.bar-list li > b { text-align: right; font-weight: 600; color: #191918; }
+.bar-track { height: 8px; overflow: hidden; border-radius: 999px; background: #f1f0eb; }
+.bar-track i { height: 100%; display: block; border-radius: inherit; background: #c9ee67; transition: width .4s ease; }
+.store-bars li { grid-template-columns: 70px 1fr 26px; }
+.bar-track .bar-shopee { background: #f0a07c; }
+.bar-track .bar-lazada { background: #a99af0; }
+.bar-track .bar-amazon { background: #f1c56a; }
+.panel-heading p .icon { vertical-align: -0.2em; }
+.panel-empty { margin: 18px 0 4px; color: #92918b; font-size: 10px; }
+.view-as-button { margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border: 1px solid #e3e1d9; border-radius: 999px; background: #f4f3ee; color: #3f3e39; font-size: 9px; font-weight: 600; cursor: pointer; transition: background .15s ease, border-color .15s ease; }
+.view-as-button:hover { background: #ebf6c8; border-color: #c9ee67; color: #191918; }
+.view-as-button:focus-visible, .view-as-action:focus-visible { outline: 2px solid #191918; outline-offset: 2px; }
+.row-actions .view-as-action { color: #4b552f; }
+.row-actions .view-as-action:hover { border-color: #c9ee67; background: #f3fadf; }
+.activity-dot { width: 28px; height: 28px; flex: none; display: grid; place-items: center; border-radius: 50%; background: #f1f0eb; color: #5d5c55; font-size: 13px; }
+.activity-view { background: #f3fadf; color: #4b552f; }
+.activity-delete { background: #fbebe6; color: #b15d3d; }
+
+/* View as User (read-only) */
+.view-as-modal { width: min(560px, 100%); }
+.view-as-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 999px; background: #f3fadf; color: #4b552f; font-size: 9px; font-weight: 700; letter-spacing: .4px; }
+.view-as-modal .modal-close { display: grid; place-items: center; font-size: 15px; }
+.view-as-body { padding: 18px 24px 4px; }
+.view-as-loading, .view-as-empty { margin: 6px 0 14px; color: #92918b; font-size: 11px; }
+.view-as-error { margin: 6px 0 14px; padding: 10px 12px; border-radius: 6px; background: #fbebe6; color: #9a4a2e; font-size: 11px; }
+.view-as-profile { display: flex; gap: 12px; align-items: center; }
+.view-as-profile > div { min-width: 0; display: grid; gap: 2px; }
+.view-as-profile strong { font-size: 15px; }
+.view-as-profile > div > span { color: #77766f; font-size: 11px; overflow: hidden; text-overflow: ellipsis; }
+.view-as-profile .status-chip { margin-left: auto; }
+.view-as-avatar { width: 48px; height: 48px; flex: none; display: grid; place-items: center; border-radius: 50%; background: #e5e9d8; color: #4b552f; font-weight: 600; object-fit: cover; }
+.view-as-meta { margin: 16px 0 6px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.view-as-meta div { padding: 9px 11px; border: 1px solid #eeece7; border-radius: 6px; background: #fafaf8; }
+.view-as-meta dt { color: #92918b; font-size: 9px; }
+.view-as-meta dd { margin: 3px 0 0; font-size: 12px; font-weight: 600; }
+.view-as-heading { margin: 16px 0 8px; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
+.view-as-list { margin: 0; padding: 0; list-style: none; }
+.view-as-list li { min-height: 46px; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid #f0efec; }
+.view-as-list li:last-child { border-bottom: 0; }
+.view-as-list li > div { min-width: 0; display: grid; gap: 2px; }
+.view-as-list strong { overflow: hidden; font-size: 11px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.view-as-list li > div > span { color: #92918b; font-size: 9px; }
+.view-as-list b { margin-left: auto; flex: none; font-size: 11px; }
+.view-as-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.view-as-chips span { padding: 5px 11px; border: 1px solid #e6e3dc; border-radius: 999px; color: #5d5b55; font-size: 10px; }
+.view-as-modal .modal-footer { margin: 18px 0 0; }
+.view-as-modal .modal-footer > span { display: inline-flex; align-items: center; gap: 5px; font-size: 9px; }
+
+@media (max-width: 1000px) {
+  .dashboard-stats { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 430px) {
+  .dashboard-stats { grid-template-columns: 1fr; }
+  .view-as-meta { grid-template-columns: 1fr; }
+}
+
+/* Confirmation dialog (sign-out) */
+.confirm-backdrop { position: fixed; z-index: 30; inset: 0; padding: 20px; display: grid; place-items: center; background: #17171566; animation: confirm-fade .15s ease; }
+.confirm-dialog { width: min(380px, 100%); padding: 22px 22px 18px; border: 1px solid #e4e2dc; border-radius: 10px; background: #fff; box-shadow: 0 25px 70px #0000002e; animation: confirm-rise .18s ease; }
+.confirm-dialog h2 { margin: 0; font-size: 18px; font-weight: 600; }
+.confirm-dialog p { margin: 8px 0 0; color: #6f6e67; font-size: 13px; line-height: 1.55; }
+.confirm-actions { margin-top: 20px; display: flex; gap: 8px; justify-content: flex-end; }
+.confirm-actions .button { min-height: 38px; padding: 0 16px; font-size: 13px; }
+.confirm-actions .button:focus-visible { outline: 2px solid #191918; outline-offset: 2px; }
+@keyframes confirm-fade { from { opacity: 0; } }
+@keyframes confirm-rise { from { opacity: 0; transform: translateY(6px) scale(.98); } }
+@media (prefers-reduced-motion: reduce) { .confirm-backdrop, .confirm-dialog { animation: none; } }

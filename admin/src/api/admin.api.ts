@@ -1,6 +1,7 @@
-import type { AdminData, AppUser, Product, StoreOffer } from "../types/models";
+import type { AdminData, AppUser, AuditEntry, Product, StoreOffer, UserView } from "../types/models";
 import { http } from "./http";
-import { adminDataSchema, offerSchema, productSchema, userSchema } from "./schemas";
+import { z } from "zod";
+import { adminDataSchema, auditEntrySchema, offerSchema, productSchema, userSchema, userViewSchema } from "./schemas";
 
 /** Admin-only endpoints. The backend rejects these for non-admin accounts (401/403). */
 
@@ -39,4 +40,15 @@ export async function updateUser(user: AppUser): Promise<AppUser> {
 
 export async function deleteUser(id: string): Promise<void> {
   await http.delete(`/admin/users/${encodeURIComponent(id)}`);
+}
+
+export async function getAuditLog(limit = 8): Promise<AuditEntry[]> {
+  const response = await http.get("/admin/audit", { params: { limit } });
+  return z.array(auditEntrySchema).parse(response.data);
+}
+
+/** Read-only "View as User" snapshot. The backend audits every call. */
+export async function getUserView(id: string): Promise<UserView> {
+  const response = await http.get(`/admin/users/${encodeURIComponent(id)}/view`);
+  return userViewSchema.parse(response.data);
 }

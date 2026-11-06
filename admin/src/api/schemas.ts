@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { AdminData, AppUser, LoginResponse, Product, StoreOffer } from "../types/models";
+import type { AdminData, AppUser, AuditEntry, LoginResponse, Product, StoreOffer, UserView } from "../types/models";
 
 // ---------- Form input ----------
 
@@ -62,4 +62,28 @@ export const healthSchema = z.object({
   status: z.literal("ok"),
   mode: z.enum(["demo", "postgres"]),
   persistence: z.enum(["memory", "postgresql"]),
+});
+
+export const auditEntrySchema: z.ZodType<AuditEntry> = z.object({
+  id: z.string(),
+  actor_user_id: z.string().nullable(),
+  action: z.enum(["create", "update", "delete", "view"]),
+  entity: z.enum(["product", "offer", "user"]),
+  entity_id: z.string(),
+  created_at: z.string(),
+});
+
+export const userViewSchema: z.ZodType<UserView> = z.object({
+  mode: z.literal("read-only"),
+  user: z.object({
+    id: z.string(),
+    display_name: z.string(),
+    email: z.string().email(),
+    role: z.enum(["admin", "user"]),
+    status: z.enum(["active", "pending"]),
+    created_at: z.string(),
+    avatar_url: z.string().nullable(),
+  }),
+  favorites: z.array(z.object({ product_id: z.string(), created_at: z.string() })),
+  searches: z.array(z.object({ id: z.string(), keyword: z.string(), searched_at: z.string() })),
 });

@@ -5,11 +5,12 @@ import type { DataKind, RecordToEdit } from "../types/admin";
 import Icon from "./Icon";
 
 /** Shared table used by the Users, Products and Offers admin pages. */
-export default function DataTable({ kind, data, onEdit, onDelete }: {
+export default function DataTable({ kind, data, onEdit, onDelete, onViewAsUser }: {
   kind: DataKind;
   data: AdminData;
   onEdit: (kind: DataKind, record: RecordToEdit) => void;
   onDelete: (kind: DataKind, id: string) => void;
+  onViewAsUser: (userId: string) => void;
 }) {
   const [query, setQuery] = useState("");
   const rows = kind === "users" ? data.users : kind === "products" ? data.products : data.offers;
@@ -19,7 +20,7 @@ export default function DataTable({ kind, data, onEdit, onDelete }: {
       <div className="table-toolbar"><label className="table-search"><span><Icon name="search" /></span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={kind === "offers" ? "ค้นหาจากสินค้า ร้านค้า หรือ URL" : kind === "products" ? "ค้นหาจากชื่อสินค้า แบรนด์ หรือหมวดหมู่" : "ค้นหาจากชื่อหรืออีเมล"} /></label><button className="button button-outline filter-button"><Icon name="filter" /> <span>ตัวกรอง</span></button><button className="button button-outline columns-button"><Icon name="columns" /> คอลัมน์</button></div>
       <div className="table-scroll"><table><thead><tr>{kind === "users" ? <><th><input type="checkbox" aria-label="เลือกทั้งหมด" /></th><th>ชื่อผู้ใช้</th><th>อีเมล</th><th>บทบาท</th><th>สถานะ</th><th>วันที่สมัคร</th><th></th></> : kind === "products" ? <><th><input type="checkbox" aria-label="เลือกทั้งหมด" /></th><th>สินค้า</th><th>แบรนด์</th><th>หมวดหมู่</th><th>สเปก</th><th>วันที่สร้าง</th><th></th></> : <><th><input type="checkbox" aria-label="เลือกทั้งหมด" /></th><th>product_id</th><th>ร้านค้า</th><th>price</th><th>original_price</th><th>shipping_info</th><th>updated_at</th><th></th></>}</tr></thead>
         <tbody>
-          {filtered.map((row) => kind === "users" ? <UserRow key={row.id} user={row as AppUser} onEdit={() => onEdit(kind, row)} onDelete={() => onDelete(kind, row.id)} /> : kind === "products" ? <ProductRow key={row.id} product={row as Product} onEdit={() => onEdit(kind, row)} onDelete={() => onDelete(kind, row.id)} /> : <OfferRow key={row.id} offer={row as StoreOffer} products={data.products} onEdit={() => onEdit(kind, row)} onDelete={() => onDelete(kind, row.id)} />)}
+          {filtered.map((row) => kind === "users" ? <UserRow key={row.id} user={row as AppUser} onView={() => onViewAsUser(row.id)} onEdit={() => onEdit(kind, row)} onDelete={() => onDelete(kind, row.id)} /> : kind === "products" ? <ProductRow key={row.id} product={row as Product} onEdit={() => onEdit(kind, row)} onDelete={() => onDelete(kind, row.id)} /> : <OfferRow key={row.id} offer={row as StoreOffer} products={data.products} onEdit={() => onEdit(kind, row)} onDelete={() => onDelete(kind, row.id)} />)}
         </tbody>
       </table></div>
       {filtered.length === 0 && <div className="table-empty">ไม่พบข้อมูลที่ค้นหา</div>}
@@ -28,12 +29,12 @@ export default function DataTable({ kind, data, onEdit, onDelete }: {
   );
 }
 
-function RowActions({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) {
-  return <div className="row-actions"><button title="แก้ไข" onClick={onEdit}><Icon name="edit" /></button><button title="ลบ" onClick={onDelete}><Icon name="trash" /></button></div>;
+function RowActions({ onEdit, onDelete, onView }: { onEdit: () => void; onDelete: () => void; onView?: () => void }) {
+  return <div className="row-actions">{onView && <button className="view-as-action" title="View as User — ดูในมุมมองผู้ใช้ (อ่านอย่างเดียว)" aria-label="View as User" onClick={onView}><Icon name="eye" /></button>}<button title="แก้ไข" onClick={onEdit}><Icon name="edit" /></button><button title="ลบ" onClick={onDelete}><Icon name="trash" /></button></div>;
 }
 
-function UserRow({ user, onEdit, onDelete }: { user: AppUser; onEdit: () => void; onDelete: () => void }) {
-  return <tr><td><input type="checkbox" aria-label={`เลือก ${user.display_name}`} /></td><td><div className="table-primary"><span className="user-avatar">{initials(user.display_name)}</span><strong>{user.display_name}</strong></div></td><td>{user.email}</td><td><span className={`role-chip ${user.role}`}>{user.role === "admin" ? "Admin" : "User"}</span></td><td><span className={`status-chip ${user.status}`}><i />{user.status === "active" ? "ใช้งาน" : "รอยืนยัน"}</span></td><td>{user.created_at}</td><td><RowActions onEdit={onEdit} onDelete={onDelete} /></td></tr>;
+function UserRow({ user, onEdit, onDelete, onView }: { user: AppUser; onEdit: () => void; onDelete: () => void; onView: () => void }) {
+  return <tr><td><input type="checkbox" aria-label={`เลือก ${user.display_name}`} /></td><td><div className="table-primary"><span className="user-avatar">{initials(user.display_name)}</span><strong>{user.display_name}</strong></div></td><td>{user.email}</td><td><span className={`role-chip ${user.role}`}>{user.role === "admin" ? "Admin" : "User"}</span></td><td><span className={`status-chip ${user.status}`}><i />{user.status === "active" ? "ใช้งาน" : "รอยืนยัน"}</span></td><td>{user.created_at}</td><td><RowActions onEdit={onEdit} onDelete={onDelete} onView={user.role === "user" ? onView : undefined} /></td></tr>;
 }
 
 function ProductRow({ product, onEdit, onDelete }: { product: Product; onEdit: () => void; onDelete: () => void }) {

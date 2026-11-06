@@ -1,7 +1,7 @@
 export type AppRole = "admin" | "user";
 export type AppStatus = "active" | "pending";
 export type StoreName = "Shopee" | "Lazada" | "Amazon";
-export type AdminAuditAction = "create" | "update" | "delete";
+export type AdminAuditAction = "create" | "update" | "delete" | "view";
 export type AdminAuditEntity = "product" | "offer" | "user";
 
 export type AdminAuditEntry = {
@@ -75,4 +75,12 @@ export type PriceHistoryDto = {
   product_id: string;
   days: number;
   series: Array<{ store: StoreName; points: Array<{ date: string; price: number }> }>;
+};
+
+/** Read-only snapshot an admin sees with "View as User". No password hash, no tokens. */
+export type UserViewDto = {
+  mode: "read-only";
+  user: AppUserDto & { avatar_url: string | null };
+  favorites: FavoriteDto[];
+  searches: RecentSearchDto[];
 };

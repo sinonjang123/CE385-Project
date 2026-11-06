@@ -84,8 +84,8 @@ CREATE TABLE favorites (
 CREATE TABLE admin_audit_logs (
     id             SERIAL PRIMARY KEY,
     actor_user_id  INT REFERENCES users(id) ON DELETE SET NULL,
-    action         VARCHAR(20) NOT NULL,
-    entity         VARCHAR(20) NOT NULL,
+    action         VARCHAR(20) NOT NULL,  -- create | update | delete | view (view = admin "View as User" แบบอ่านอย่างเดียว)
+    entity         VARCHAR(20) NOT NULL,  -- product | offer | user
     entity_id      VARCHAR(100) NOT NULL,
     created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );

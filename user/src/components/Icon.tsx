@@ -1,6 +1,6 @@
 /** Minimal line icons (24px grid, 1.75 stroke) sized to the surrounding font size. */
 export type IconName = "arrow-right" | "arrow-left" | "arrow-down" | "external" | "search"
-  | "grid" | "user" | "box" | "tag" | "chart" | "edit" | "trash" | "filter" | "columns" | "lock";
+  | "grid" | "user" | "box" | "tag" | "chart" | "edit" | "trash" | "filter" | "columns" | "lock" | "eye" | "heart" | "close";
 
 const paths: Record<IconName, string> = {
   "arrow-right": "M5 12h14M13 6l6 6-6 6",
@@ -18,6 +18,9 @@ const paths: Record<IconName, string> = {
   filter: "M4.5 5.5h15l-5.8 6.8v5.4l-3.4 1.8v-7.2L4.5 5.5Z",
   columns: "M4.5 4.5h15v15h-15zM9.5 4.5v15M14.5 4.5v15",
   lock: "M6.5 11h11v8.5h-11zM8.5 11V8a3.5 3.5 0 0 1 7 0v3",
+  eye: "M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12ZM12 14.75a2.75 2.75 0 1 0 0-5.5 2.75 2.75 0 0 0 0 5.5Z",
+  heart: "M12 19.5s-7.5-4.4-7.5-9.6A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.3c0 5.2-7.5 9.6-7.5 9.6Z",
+  close: "M6.5 6.5l11 11M17.5 6.5l-11 11",
 };
 
 export default function Icon({ name, className }: { name: IconName; className?: string }) {

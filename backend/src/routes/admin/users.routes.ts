@@ -4,9 +4,12 @@ import {
   countAdmins,
   deleteUser,
   findUserByEmail,
+  getUserProfile,
   listUsers,
   updateUser,
 } from "../../repositories/user.repository.js";
+import { listFavorites, listRecentSearches } from "../../repositories/member.repository.js";
+import type { UserViewDto } from "../../types/index.js";
 import { hasPrismaCode, principal, routeId, validationError } from "../../utils/http.js";
 import { userUpdateSchema } from "../../validators/admin.schema.js";
 
@@ -18,6 +21,38 @@ const router = express.Router();
 
 router.get("/", async (_request, response) => {
   response.json(await listUsers());
+});
+
+/**
+ * "View as User": a read-only snapshot of what a member sees (profile, favorites, recent searches).
+ * No token is issued and nothing is changed. Only regular user accounts can be viewed,
+ * and every view is written to the admin audit log.
+ */
+router.get("/:id/view", async (request, response) => {
+  const id = routeId(request);
+  const user = (await listUsers()).find((item) => item.id === id);
+  if (!user) {
+    response.status(404).json({ message: "ไม่พบผู้ใช้" });
+    return;
+  }
+  if (user.role !== "user") {
+    response.status(403).json({ message: "ดูในมุมมองผู้ใช้ได้เฉพาะบัญชีผู้ใช้ทั่วไป" });
+    return;
+  }
+  const [profile, favorites, searches] = await Promise.all([
+    getUserProfile(id),
+    listFavorites(id),
+    listRecentSearches(id),
+  ]);
+  await recordAdminAudit({ actorUserId: principal(request).id, action: "view", entity: "user", entityId: id });
+  const view: UserViewDto = {
+    mode: "read-only",
+    user: { ...user, avatar_url: profile?.avatar_url ?? null },
+    favorites,
+    searches,
+  };
+  response.setHeader("Cache-Control", "no-store");
+  response.json(view);
 });
 
 router.put("/:id", async (request, response) => {

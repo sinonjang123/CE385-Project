@@ -392,3 +392,15 @@ circle.series-shopee { fill: var(--series-shopee); } circle.series-lazada { fill
 .back-link:focus-visible, .login-back:focus-visible { outline: 2px solid #191918; outline-offset: 2px; }
 .back-icon { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px #1a19120f; font-size: 14px; transition: transform .18s ease; }
 .back-link:hover .back-icon, .login-back:hover .back-icon { transform: translateX(-2px); }
+
+/* Confirmation dialog (sign-out) */
+.confirm-backdrop { position: fixed; z-index: 30; inset: 0; padding: 20px; display: grid; place-items: center; background: #17171566; animation: confirm-fade .15s ease; }
+.confirm-dialog { width: min(380px, 100%); padding: 22px 22px 18px; border: 1px solid #e4e2dc; border-radius: 10px; background: #fff; box-shadow: 0 25px 70px #0000002e; animation: confirm-rise .18s ease; }
+.confirm-dialog h2 { margin: 0; font-size: 18px; font-weight: 600; }
+.confirm-dialog p { margin: 8px 0 0; color: #6f6e67; font-size: 13px; line-height: 1.55; }
+.confirm-actions { margin-top: 20px; display: flex; gap: 8px; justify-content: flex-end; }
+.confirm-actions .button { min-height: 38px; padding: 0 16px; font-size: 13px; }
+.confirm-actions .button:focus-visible { outline: 2px solid #191918; outline-offset: 2px; }
+@keyframes confirm-fade { from { opacity: 0; } }
+@keyframes confirm-rise { from { opacity: 0; transform: translateY(6px) scale(.98); } }
+@media (prefers-reduced-motion: reduce) { .confirm-backdrop, .confirm-dialog { animation: none; } }

@@ -59,3 +59,20 @@ export type LoginResponse = {
   user: AuthUser;
   demo: boolean;
 };
+
+export type AuditEntry = {
+  id: string;
+  actor_user_id: string | null;
+  action: "create" | "update" | "delete" | "view";
+  entity: "product" | "offer" | "user";
+  entity_id: string;
+  created_at: string;
+};
+
+/** Read-only snapshot returned by GET /api/admin/users/:id/view. */
+export type UserView = {
+  mode: "read-only";
+  user: AppUser & { avatar_url: string | null };
+  favorites: Array<{ product_id: string; created_at: string }>;
+  searches: Array<{ id: string; keyword: string; searched_at: string }>;
+};

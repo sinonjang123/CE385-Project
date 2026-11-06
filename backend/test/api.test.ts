@@ -426,3 +426,47 @@ test("member features: favorites, recent searches and mock price history are per
   );
   assert.equal((await request("/api/account/price-history/no-such-product", { headers: alice })).status, 404);
 });
+
+test("admin View as User is read-only, admin-only, limited to user accounts and audited", async () => {
+  const registration = await request("/api/auth/register", {
+    method: "POST",
+    body: JSON.stringify({ displayName: "Viewed Member", email: "viewed@example.test", password: "MemberPassword123" }),
+  });
+  assert.equal(registration.status, 201);
+  const member = await registration.json() as { accessToken: string; user: { id: string } };
+  const memberHeaders = { Authorization: `Bearer ${member.accessToken}` };
+  assert.equal((await request("/api/account/favorites/p-003", { method: "PUT", headers: memberHeaders })).status, 204);
+  assert.equal((await request("/api/account/searches", { method: "POST", headers: memberHeaders, body: JSON.stringify({ keyword: "จอคอม" }) })).status, 201);
+
+  const viewPath = `/api/admin/users/${member.user.id}/view`;
+  assert.equal((await request(viewPath)).status, 401, "requires sign-in");
+  assert.equal((await request(viewPath, { headers: memberHeaders })).status, 403, "members cannot view other accounts");
+
+  const admin = await login("admin@test.findthis", "AdminPassword123");
+  const adminHeaders = { Authorization: `Bearer ${admin.accessToken}` };
+  const viewResponse = await request(viewPath, { headers: adminHeaders });
+  assert.equal(viewResponse.status, 200);
+  assert.equal(viewResponse.headers.get("cache-control"), "no-store");
+  const view = await viewResponse.json() as Record<string, unknown> & {
+    mode: string;
+    user: Record<string, unknown>;
+    favorites: Array<{ product_id: string }>;
+    searches: Array<{ keyword: string }>;
+  };
+  assert.equal(view.mode, "read-only");
+  assert.equal(view.user.email, "viewed@example.test");
+  assert.equal("password_hash" in view.user, false, "never exposes the password hash");
+  assert.equal("accessToken" in view, false, "does not issue a token for the viewed user");
+  assert.deepEqual(view.favorites.map((item) => item.product_id), ["p-003"]);
+  assert.deepEqual(view.searches.map((item) => item.keyword), ["จอคอม"]);
+
+  assert.equal((await request(`/api/admin/users/${admin.user.id}/view`, { headers: adminHeaders })).status, 403, "admin accounts cannot be viewed");
+  assert.equal((await request("/api/admin/users/no-such-user/view", { headers: adminHeaders })).status, 404);
+
+  const audit = await (await request("/api/admin/audit", { headers: adminHeaders })).json() as Array<{
+    actor_user_id: string; action: string; entity: string; entity_id: string;
+  }>;
+  assert.ok(audit.some((entry) => entry.action === "view" && entry.entity === "user"
+    && entry.entity_id === member.user.id && entry.actor_user_id === admin.user.id));
+  assert.equal(audit.filter((entry) => entry.action === "view").length, 1, "rejected views are not logged as views");
+});
