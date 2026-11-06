@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { CatalogData, LoginResponse, Product, StoreOffer, UserProfile } from "../types/models";
+import type { CatalogData, Favorite, LoginResponse, PriceHistory, Product, RecentSearch, StoreOffer, UserProfile } from "../types/models";
 
 // ---------- Form input (validated before sending) ----------
 
@@ -58,7 +58,7 @@ export const productSchema: z.ZodType<Product> = z.object({
   id: z.string(),
   name: z.string(),
   brand: z.string(),
-  category: z.enum(["เมาส์", "คีย์บอร์ด", "หูฟัง", "โน้ตบุ๊ก", "รองเท้า", "สมาร์ทวอทช์"]),
+  category: z.enum(["เมาส์", "คีย์บอร์ด", "หูฟัง", "โน้ตบุ๊ก", "รองเท้า", "สมาร์ทวอทช์", "พาวเวอร์แบงก์", "สายชาร์จ", "จอคอมพิวเตอร์"]),
   description: z.string(),
   image_url: z.string(),
   emoji: z.string(),
@@ -80,4 +80,26 @@ export const offerSchema: z.ZodType<StoreOffer> = z.object({
 export const catalogSchema: z.ZodType<CatalogData> = z.object({
   products: z.array(productSchema),
   offers: z.array(offerSchema),
+});
+
+export const favoritesResponseSchema: z.ZodType<{ favorites: Favorite[] }> = z.object({
+  favorites: z.array(z.object({ product_id: z.string(), created_at: z.string() })),
+});
+
+const recentSearchSchema: z.ZodType<RecentSearch> = z.object({ id: z.string(), keyword: z.string(), searched_at: z.string() });
+
+export const searchesResponseSchema: z.ZodType<{ searches: RecentSearch[] }> = z.object({ searches: z.array(recentSearchSchema) });
+
+export const recordSearchResponseSchema: z.ZodType<{ search: RecentSearch }> = z.object({ search: recentSearchSchema });
+
+export const searchKeywordSchema = z.string().trim().min(1).max(100);
+
+export const priceHistorySchema: z.ZodType<PriceHistory> = z.object({
+  mode: z.literal("mock"),
+  product_id: z.string(),
+  days: z.number().int().positive(),
+  series: z.array(z.object({
+    store: z.enum(["Shopee", "Lazada", "Amazon"]),
+    points: z.array(z.object({ date: z.string(), price: z.number() })),
+  })),
 });

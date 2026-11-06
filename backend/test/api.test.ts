@@ -52,7 +52,7 @@ test("registration, authorization, catalog CRUD, and admin safeguards", async ()
     products: Array<{ id: string }>;
     offers: Array<{ product_id: string; store: string; price: number }>;
   };
-  assert.equal(catalog.products.length, 8);
+  assert.equal(catalog.products.length, 11);
   for (const product of catalog.products) {
     const productOffers = catalog.offers.filter((offer) => offer.product_id === product.id);
     assert.deepEqual(productOffers.map((offer) => offer.store).sort(), ["Amazon", "Lazada", "Shopee"]);
@@ -71,7 +71,7 @@ test("registration, authorization, catalog CRUD, and admin safeguards", async ()
     retailers: Array<{ offers: Array<{ product_id: string }> }>;
   };
   assert.equal(retailerPayload.mode, "mock");
-  assert.deepEqual(retailerPayload.retailers.map((retailer) => retailer.offers.length), [8, 8, 8]);
+  assert.deepEqual(retailerPayload.retailers.map((retailer) => retailer.offers.length), [11, 11, 11]);
 
   const anonymousAdminData = await request("/api/admin/data");
   assert.equal(anonymousAdminData.status, 401);
@@ -348,4 +348,81 @@ test("signed-in users can update their own profile and change password with the 
   assert.equal(oldLogin.status, 401);
   const newLogin = await login("profile@example.test", "NewPassword123");
   assert.equal(newLogin.user.role, "user");
+});
+
+test("member features: favorites, recent searches and mock price history are per-user and sign-in only", async () => {
+  async function member(email: string) {
+    const response = await request("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ displayName: "Member", email, password: "MemberPassword123" }),
+    });
+    assert.equal(response.status, 201);
+    const body = await response.json() as { accessToken: string };
+    return { Authorization: `Bearer ${body.accessToken}` };
+  }
+  const alice = await member("alice@example.test");
+  const bob = await member("bob@example.test");
+
+  for (const path of ["/api/account/favorites", "/api/account/searches", "/api/account/price-history/p-001"]) {
+    assert.equal((await request(path)).status, 401, `${path} requires sign-in`);
+  }
+
+  // Favorites
+  assert.equal((await request("/api/account/favorites/p-001", { method: "PUT", headers: alice })).status, 204);
+  assert.equal((await request("/api/account/favorites/p-001", { method: "PUT", headers: alice })).status, 204, "idempotent");
+  assert.equal((await request("/api/account/favorites/p-002", { method: "PUT", headers: alice })).status, 204);
+  assert.equal((await request("/api/account/favorites/no-such-product", { method: "PUT", headers: alice })).status, 404);
+  const aliceFavorites = await (await request("/api/account/favorites", { headers: alice })).json() as { favorites: Array<{ product_id: string }> };
+  assert.deepEqual(aliceFavorites.favorites.map((item) => item.product_id).sort(), ["p-001", "p-002"]);
+  const bobFavorites = await (await request("/api/account/favorites", { headers: bob })).json() as { favorites: unknown[] };
+  assert.equal(bobFavorites.favorites.length, 0, "favorites are not shared between users");
+  assert.equal((await request("/api/account/favorites/p-001", { method: "DELETE", headers: alice })).status, 204);
+  const afterRemove = await (await request("/api/account/favorites", { headers: alice })).json() as { favorites: Array<{ product_id: string }> };
+  assert.deepEqual(afterRemove.favorites.map((item) => item.product_id), ["p-002"]);
+
+  // Recent searches
+  for (const keyword of ["เมาส์", "หูฟัง", "เมาส์"]) {
+    const recorded = await request("/api/account/searches", { method: "POST", headers: alice, body: JSON.stringify({ keyword }) });
+    assert.equal(recorded.status, 201);
+  }
+  assert.equal((await request("/api/account/searches", { method: "POST", headers: alice, body: JSON.stringify({ keyword: "   " }) })).status, 400);
+  const searches = await (await request("/api/account/searches", { headers: alice })).json() as { searches: Array<{ id: string; keyword: string }> };
+  assert.deepEqual(searches.searches.map((item) => item.keyword), ["เมาส์", "หูฟัง"], "newest first, repeated keyword moved to the top");
+  for (let index = 0; index < 12; index += 1) {
+    await request("/api/account/searches", { method: "POST", headers: alice, body: JSON.stringify({ keyword: `คำค้น ${index}` }) });
+  }
+  const capped = await (await request("/api/account/searches", { headers: alice })).json() as { searches: Array<{ id: string; keyword: string }> };
+  assert.equal(capped.searches.length, 10);
+  assert.equal(capped.searches[0]?.keyword, "คำค้น 11");
+
+  const firstSearch = capped.searches[0];
+  assert.ok(firstSearch);
+  assert.equal((await request(`/api/account/searches/${firstSearch.id}`, { method: "DELETE", headers: bob })).status, 404, "cannot delete another user's search");
+  assert.equal((await request(`/api/account/searches/${firstSearch.id}`, { method: "DELETE", headers: alice })).status, 204);
+  assert.equal((await request("/api/account/searches", { method: "DELETE", headers: alice })).status, 204);
+  const cleared = await (await request("/api/account/searches", { headers: alice })).json() as { searches: unknown[] };
+  assert.equal(cleared.searches.length, 0);
+
+  // Mock price history ends at the price shown in the public catalog
+  const historyResponse = await request("/api/account/price-history/p-001", { headers: alice });
+  assert.equal(historyResponse.status, 200);
+  const history = await historyResponse.json() as {
+    mode: string;
+    days: number;
+    series: Array<{ store: string; points: Array<{ date: string; price: number }> }>;
+  };
+  assert.equal(history.mode, "mock");
+  assert.deepEqual(history.series.map((item) => item.store).sort(), ["Amazon", "Lazada", "Shopee"]);
+  const catalog = await (await request("/api/catalog")).json() as { offers: Array<{ product_id: string; store: string; price: number }> };
+  for (const item of history.series) {
+    assert.equal(item.points.length, history.days);
+    const current = catalog.offers.find((offer) => offer.product_id === "p-001" && offer.store === item.store);
+    assert.equal(item.points.at(-1)?.price, current?.price);
+  }
+  assert.deepEqual(
+    await (await request("/api/account/price-history/p-001", { headers: alice })).json(),
+    history,
+    "history is stable between requests",
+  );
+  assert.equal((await request("/api/account/price-history/no-such-product", { headers: alice })).status, 404);
 });

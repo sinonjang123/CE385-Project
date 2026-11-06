@@ -4,6 +4,7 @@ import { getCatalog } from "./api/catalog.api";
 import SiteHeader from "./components/SiteHeader";
 import Toast from "./components/Toast";
 import { seedData } from "./data/seed";
+import { useMemberData } from "./hooks/useMemberData";
 import ComparePage from "./pages/ComparePage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -63,6 +64,28 @@ export default function App() {
     });
     return () => { active = false; };
   }, [sessionUserId]);
+
+  const member = useMemberData(sessionUserId, setNotice);
+
+  function requireLogin(message: string) {
+    setNotice(message);
+    setScreen("login");
+  }
+
+  function toggleFavorite(productId: string) {
+    if (!authUser) {
+      requireLogin("เข้าสู่ระบบเพื่อบันทึกรายการโปรด");
+      return;
+    }
+    void member.toggleFavorite(productId);
+  }
+
+  const favoriteProducts = useMemo(() => member.favoriteIds.flatMap((id) => {
+    const product = catalog.products.find((item) => item.id === id);
+    if (!product) return [];
+    const prices = catalog.offers.filter((offer) => offer.product_id === id).map((offer) => offer.price);
+    return [{ product, lowestPrice: prices.length ? Math.min(...prices) : null }];
+  }), [catalog, member.favoriteIds]);
 
   function handleProfileSaved(saved: UserProfile) {
     const user: AuthUser = { id: saved.id, display_name: saved.display_name, email: saved.email, role: saved.role };
@@ -126,6 +149,13 @@ export default function App() {
           onCategory={setCategory}
           offers={catalog.offers}
           onCompare={showCompare}
+          favoriteIds={member.favoriteIds}
+          onToggleFavorite={toggleFavorite}
+          isMember={Boolean(authUser)}
+          recentSearches={member.recentSearches}
+          onSubmitSearch={(keyword) => void member.saveSearch(keyword)}
+          onRemoveSearch={(id) => void member.removeSearch(id)}
+          onClearSearches={() => void member.clearAllSearches()}
         />
       ) : screen === "sources" ? (
         <PriceSourcesPage data={catalog} onCompare={showCompare} />
@@ -139,12 +169,19 @@ export default function App() {
           onLogout={signOut}
           onProfileSaved={handleProfileSaved}
           onNotice={setNotice}
+          favorites={favoriteProducts}
+          onCompare={showCompare}
+          onToggleFavorite={toggleFavorite}
         />
       ) : selectedProduct ? (
         <ComparePage
           product={selectedProduct}
           offers={catalog.offers.filter((offer) => offer.product_id === selectedProduct.id)}
           onBack={() => setScreen("home")}
+          isMember={Boolean(authUser)}
+          isFavorite={member.favoriteIds.includes(selectedProduct.id)}
+          onToggleFavorite={() => toggleFavorite(selectedProduct.id)}
+          onLogin={() => setScreen("login")}
         />
       ) : (
         <main className="empty-state">

@@ -2,9 +2,9 @@ import { prisma } from "../db/prisma.js";
 import { fetchMockRetailerOffers } from "../services/mockRetailers.js";
 import type { AdminData, CatalogData, ProductDto, StoreOfferDto } from "../types/index.js";
 import { integerId, toOffer, toProduct, toUser } from "./mappers.js";
-import { memory } from "./memoryStore.js";
+import { memory, removeMemoryProductData } from "./memoryStore.js";
 
-const categoryDefaults = ["เมาส์", "คีย์บอร์ด", "หูฟัง", "โน้ตบุ๊ก", "รองเท้า", "สมาร์ทวอทช์"];
+const categoryDefaults = ["เมาส์", "คีย์บอร์ด", "หูฟัง", "โน้ตบุ๊ก", "รองเท้า", "สมาร์ทวอทช์", "พาวเวอร์แบงก์", "สายชาร์จ", "จอคอมพิวเตอร์"];
 const supportedStores = ["Shopee", "Lazada", "Amazon"];
 const storeUrls: Record<string, string> = {
   Shopee: "https://shopee.co.th/",
@@ -85,6 +85,7 @@ export async function deleteProduct(id: string): Promise<boolean> {
     const exists = memory.products.some((product) => product.id === id);
     memory.products = memory.products.filter((product) => product.id !== id);
     memory.offers = memory.offers.filter((offer) => offer.product_id !== id);
+    removeMemoryProductData(id);
     return exists;
   }
   const parsedId = integerId(id);

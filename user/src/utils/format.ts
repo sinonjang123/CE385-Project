@@ -1,6 +1,6 @@
 import type { Category, StoreName } from "../types/models";
 
-export const categories: Array<Category | "ทั้งหมด"> = ["ทั้งหมด", "เมาส์", "คีย์บอร์ด", "หูฟัง", "โน้ตบุ๊ก", "รองเท้า", "สมาร์ทวอทช์"];
+export const categories: Array<Category | "ทั้งหมด"> = ["ทั้งหมด", "เมาส์", "คีย์บอร์ด", "หูฟัง", "โน้ตบุ๊ก", "รองเท้า", "สมาร์ทวอทช์", "พาวเวอร์แบงก์", "สายชาร์จ", "จอคอมพิวเตอร์"];
 export const stores: StoreName[] = ["Shopee", "Lazada", "Amazon"];
 
 export const money = (amount: number) => `฿${amount.toLocaleString("th-TH")}`;

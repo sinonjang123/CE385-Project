@@ -27,7 +27,7 @@ export const productSchema: z.ZodType<Product> = z.object({
   id: z.string(),
   name: z.string(),
   brand: z.string(),
-  category: z.enum(["เมาส์", "คีย์บอร์ด", "หูฟัง", "โน้ตบุ๊ก", "รองเท้า", "สมาร์ทวอทช์"]),
+  category: z.enum(["เมาส์", "คีย์บอร์ด", "หูฟัง", "โน้ตบุ๊ก", "รองเท้า", "สมาร์ทวอทช์", "พาวเวอร์แบงก์", "สายชาร์จ", "จอคอมพิวเตอร์"]),
   description: z.string(),
   image_url: z.string(),
   emoji: z.string(),

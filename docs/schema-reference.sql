@@ -67,7 +67,18 @@ CREATE TABLE search_history (
     id            BIGSERIAL PRIMARY KEY,
     user_id       INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     keyword       VARCHAR(255) NOT NULL,  
-    searched_at   TIMESTAMPTZ NOT NULL DEFAULT now() 
+    searched_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+-- ค้นหาล่าสุดของสมาชิก (เก็บล่าสุด 10 คำต่อคน)
+CREATE INDEX search_history_user_id_searched_at_idx ON search_history (user_id, searched_at);
+
+-- รายการโปรด (wishlist) ของสมาชิก
+CREATE TABLE favorites (
+    id          SERIAL PRIMARY KEY,
+    user_id     INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    product_id  INT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (user_id, product_id)
 );
 
 CREATE TABLE admin_audit_logs (

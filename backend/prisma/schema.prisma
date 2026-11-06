@@ -26,6 +26,7 @@ model Product {
   category    Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   specs       ProductSpec[]
   listings    Listing[]
+  favorites   Favorite[]
 
   @@map("products")
 }
@@ -91,6 +92,7 @@ model User {
   createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamptz
   searchHistory SearchHistory[]
   adminAuditLogs AdminAuditLog[]
+  favorites    Favorite[]
 
   @@map("users")
 }
@@ -115,5 +117,18 @@ model SearchHistory {
   searchedAt DateTime @default(now()) @map("searched_at") @db.Timestamptz
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, searchedAt])
   @@map("search_history")
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  productId Int      @map("product_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("favorites")
 }

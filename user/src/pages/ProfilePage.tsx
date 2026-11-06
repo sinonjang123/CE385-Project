@@ -3,13 +3,21 @@ import { ZodError } from "zod";
 import { changePassword, updateProfile } from "../api/account.api";
 import { changePasswordSchema, profileFormSchema } from "../api/schemas";
 import Avatar from "../components/Avatar";
-import type { AuthUser, UserProfile } from "../types/models";
+import FavoriteButton from "../components/FavoriteButton";
+import type { AuthUser, Product, UserProfile } from "../types/models";
 import { avatarFileTypes, resizeAvatar } from "../utils/avatar";
 import { apiErrorMessage } from "../utils/errors";
+import { money } from "../utils/format";
+import Icon from "../components/Icon";
+
+export type FavoriteProduct = { product: Product; lowestPrice: number | null };
 
 const roleLabel = (role: AuthUser["role"]) => role === "admin" ? "ผู้ดูแลระบบ" : "ลูกค้า";
 
-export default function ProfilePage({ authUser, profile, profileError, onHome, onLogin, onLogout, onProfileSaved, onNotice }: {
+export default function ProfilePage({ authUser, profile, profileError, onHome, onLogin, onLogout, onProfileSaved, onNotice, favorites, onCompare, onToggleFavorite }: {
+  favorites: FavoriteProduct[];
+  onCompare: (productId: string) => void;
+  onToggleFavorite: (productId: string) => void;
   authUser: AuthUser | null;
   profile: UserProfile | null;
   profileError: string;
@@ -28,10 +36,13 @@ export default function ProfilePage({ authUser, profile, profileError, onHome, o
           <div className="profile-large-avatar">?</div>
           <h2>เข้าสู่ระบบเพื่อดูโปรไฟล์</h2>
           <p>เข้าสู่ระบบหรือสมัครสมาชิกเพื่อจัดการบัญชีของคุณ</p>
-          <button className="button button-dark" onClick={onLogin}>เข้าสู่ระบบ / สมัครสมาชิก <span>↗</span></button>
+          <button className="button button-dark" onClick={onLogin}>เข้าสู่ระบบ / สมัครสมาชิก <span><Icon name="arrow-right" /></span></button>
         </section>
       ) : profile ? (
-        <ProfileForm profile={profile} onHome={onHome} onLogout={onLogout} onProfileSaved={onProfileSaved} onNotice={onNotice} />
+        <>
+          <ProfileForm profile={profile} onHome={onHome} onLogout={onLogout} onProfileSaved={onProfileSaved} onNotice={onNotice} />
+          <FavoritesSection favorites={favorites} onCompare={onCompare} onToggleFavorite={onToggleFavorite} onHome={onHome} />
+        </>
       ) : (
         <section className="profile-card profile-guest" aria-live="polite">
           <Avatar className="profile-large-avatar" name={authUser.display_name} />
@@ -40,7 +51,7 @@ export default function ProfilePage({ authUser, profile, profileError, onHome, o
           <button className="button button-dark" onClick={onLogout}>ออกจากระบบ</button>
         </section>
       )}
-      <button className="back-link" onClick={onHome}>← กลับไปหน้าหลัก</button>
+      <button className="back-link" onClick={onHome}><span className="back-icon"><Icon name="arrow-left" /></span> กลับไปหน้าหลัก</button>
     </main>
   );
 }
@@ -226,5 +237,40 @@ function ConfirmSaveDialog({ changes, onConfirm, onCancel }: { changes: string[]
         </div>
       </div>
     </div>
+  );
+}
+
+function FavoritesSection({ favorites, onCompare, onToggleFavorite, onHome }: {
+  favorites: FavoriteProduct[];
+  onCompare: (productId: string) => void;
+  onToggleFavorite: (productId: string) => void;
+  onHome: () => void;
+}) {
+  return (
+    <section className="profile-card profile-favorites" aria-labelledby="profile-favorites-title">
+      <div className="profile-section-heading">
+        <h2 id="profile-favorites-title">รายการโปรด</h2>
+        <span>{favorites.length} รายการ</span>
+      </div>
+      {favorites.length ? (
+        <ul className="favorite-list">
+          {favorites.map(({ product, lowestPrice }) => (
+            <li key={product.id}>
+              <button type="button" className="favorite-item" onClick={() => onCompare(product.id)}>
+                <span className="favorite-emoji" aria-hidden="true">{product.emoji}</span>
+                <span className="favorite-copy"><strong>{product.name}</strong><small>{product.brand} · {product.category}</small></span>
+                <span className="favorite-price">{lowestPrice === null ? "ยังไม่มีราคา" : <>เริ่มต้น <b>{money(lowestPrice)}</b></>}</span>
+              </button>
+              <FavoriteButton active productName={product.name} onToggle={() => onToggleFavorite(product.id)} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="favorite-empty">
+          <p>ยังไม่มีรายการโปรด กดปุ่ม ♡ ที่สินค้าเพื่อบันทึกไว้ดูภายหลัง</p>
+          <button type="button" className="button button-outline" onClick={onHome}>เลือกดูสินค้า</button>
+        </div>
+      )}
+    </section>
   );
 }

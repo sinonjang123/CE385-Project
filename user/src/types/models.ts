@@ -4,7 +4,10 @@ export type Category =
   | "หูฟัง"
   | "โน้ตบุ๊ก"
   | "รองเท้า"
-  | "สมาร์ทวอทช์";
+  | "สมาร์ทวอทช์"
+  | "พาวเวอร์แบงก์"
+  | "สายชาร์จ"
+  | "จอคอมพิวเตอร์";
 
 export type StoreName = "Shopee" | "Lazada" | "Amazon";
 
@@ -59,3 +62,15 @@ export type LoginResponse = {
 
 /** The signed-in user's own profile (GET/PATCH /api/account/profile). */
 export type UserProfile = AuthUser & { avatar_url: string | null };
+
+export type Favorite = { product_id: string; created_at: string };
+
+export type RecentSearch = { id: string; keyword: string; searched_at: string };
+
+/** Mock price history (GET /api/account/price-history/:productId) — not real past prices. */
+export type PriceHistory = {
+  mode: "mock";
+  product_id: string;
+  days: number;
+  series: Array<{ store: StoreName; points: Array<{ date: string; price: number }> }>;
+};

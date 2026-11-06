@@ -1,6 +1,13 @@
-import type { Product, StoreOffer } from "../types/models";
+import { useEffect, useState } from "react";
+import { ZodError } from "zod";
+import { getPriceHistory } from "../api/member.api";
+import FavoriteButton from "../components/FavoriteButton";
+import PriceHistoryChart from "../components/PriceHistoryChart";
+import type { PriceHistory, Product, StoreOffer } from "../types/models";
+import { apiErrorMessage } from "../utils/errors";
 import { dateTime, money, storeClass, storeMark } from "../utils/format";
 import { storeLink } from "../utils/storeLinks";
+import Icon from "../components/Icon";
 
 function priceStats(offers: StoreOffer[]) {
   if (!offers.length) return null;
@@ -25,12 +32,57 @@ function OfferLink({ offer, productName, primary }: { offer: StoreOffer; product
       rel="noopener noreferrer"
       title={link.kind === "search" ? `เปิดหน้าค้นหา "${productName}" บน ${offer.store}` : undefined}
     >
-      {link.label} <span>↗</span>
+      {link.label} <span><Icon name="external" /></span>
     </a>
   );
 }
 
-export default function ComparePage({ product, offers, onBack }: { product: Product; offers: StoreOffer[]; onBack: () => void }) {
+function PriceHistorySection({ productId, isMember, onLogin }: { productId: string; isMember: boolean; onLogin: () => void }) {
+  const [history, setHistory] = useState<PriceHistory | null>(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setHistory(null);
+    setError("");
+    if (!isMember) return;
+    let active = true;
+    getPriceHistory(productId).then((loaded) => {
+      if (active) setHistory(loaded);
+    }).catch((reason: unknown) => {
+      if (active) setError(reason instanceof ZodError ? "ข้อมูลประวัติราคาจากเซิร์ฟเวอร์ไม่ถูกต้อง" : apiErrorMessage(reason, "โหลดประวัติราคาไม่สำเร็จ"));
+    });
+    return () => { active = false; };
+  }, [productId, isMember]);
+
+  return (
+    <section className="history-section">
+      <div className="section-heading"><div><div className="eyebrow"><span className="eyebrow-dot" /> MEMBERS ONLY</div><h2>ประวัติราคา</h2><p>ดูแนวโน้มราคาย้อนหลังของแต่ละร้าน (ข้อมูลจำลอง)</p></div></div>
+      {!isMember ? (
+        <div className="history-locked">
+          <span aria-hidden="true"><Icon name="lock" /></span>
+          <div><strong>สำหรับสมาชิกเท่านั้น</strong><p>เข้าสู่ระบบหรือสมัครสมาชิกฟรี เพื่อดูกราฟประวัติราคา บันทึกรายการโปรด และดูประวัติการค้นหา</p></div>
+          <button type="button" className="button button-dark" onClick={onLogin}>เข้าสู่ระบบ / สมัครสมาชิก</button>
+        </div>
+      ) : error ? (
+        <p className="history-empty" role="alert">{error}</p>
+      ) : history ? (
+        <PriceHistoryChart history={history} />
+      ) : (
+        <p className="history-empty" aria-live="polite">กำลังโหลดประวัติราคา...</p>
+      )}
+    </section>
+  );
+}
+
+export default function ComparePage({ product, offers, onBack, isMember, isFavorite, onToggleFavorite, onLogin }: {
+  product: Product;
+  offers: StoreOffer[];
+  onBack: () => void;
+  isMember: boolean;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
+  onLogin: () => void;
+}) {
   const sortedOffers = [...offers].sort((a, b) => a.price - b.price);
   const lowest = sortedOffers[0];
   const stats = priceStats(sortedOffers);
@@ -45,7 +97,9 @@ export default function ComparePage({ product, offers, onBack }: { product: Prod
         </div>
         <div className="compare-product-copy">
           <div className="eyebrow"><span className="eyebrow-dot" /> {product.brand} · {product.category}</div>
-          <h1>{product.name}</h1><p>{product.description}</p>
+          <h1>{product.name}</h1>
+          <FavoriteButton className="compare-favorite" active={isFavorite} productName={product.name} onToggle={onToggleFavorite} withLabel />
+          <p>{product.description}</p>
           <div className="compare-summary"><span>ราคาดีที่สุด</span><strong>{lowest ? money(lowest.price) : "ยังไม่มีราคา"}</strong><span>จาก {lowest?.store ?? "—"}</span><span className="save-badge">{lowest ? `ประหยัด ${money(lowest.original_price - lowest.price)}` : "เพิ่มข้อเสนอในแอดมิน"}</span></div>
         </div>
       </section>
@@ -64,6 +118,7 @@ export default function ComparePage({ product, offers, onBack }: { product: Prod
         </div>
         {sortedOffers.length > 0 && <p className="offer-link-note">ปุ่ม "ค้นหาใน…" จะเปิดหน้าค้นหาสินค้าบนเว็บร้านค้า ราคาที่แสดงบน find THIS เป็นข้อมูลจำลอง โปรดตรวจสอบราคาจริงที่ร้านค้า</p>}
       </section>
+      <PriceHistorySection productId={product.id} isMember={isMember} onLogin={onLogin} />
       <section className="specs-panel">
         <div><div className="eyebrow"><span className="eyebrow-dot" /> PRODUCT DETAILS</div><h2>ข้อมูลสินค้า</h2></div>
         <div className="product-details">
@@ -87,7 +142,7 @@ export default function ComparePage({ product, offers, onBack }: { product: Prod
           </>}
         </div>
       </section>
-      <button className="back-link" onClick={onBack}>← กลับไปดูสินค้าทั้งหมด</button>
+      <button className="back-link" onClick={onBack}><span className="back-icon"><Icon name="arrow-left" /></span> กลับไปดูสินค้าทั้งหมด</button>
     </main>
   );
 }

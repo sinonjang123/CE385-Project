@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
+@theme { --font-sans: "Sarabun", Tahoma, sans-serif; }
+
 :root {
   font-family: "Sarabun", Tahoma, sans-serif;
   color: #191918;
@@ -47,7 +49,7 @@ a { color: inherit; }
 .hero h1 { margin: 21px 0 18px; font-size: clamp(45px, 5vw, 68px); font-weight: 600; letter-spacing: -3.2px; line-height: 1.17; }
 .hero-copy > p { margin: 0; color: #74736d; font-size: 16px; line-height: 1.8; }
 .hero-search { width: min(590px, 100%); height: 61px; padding: 5px 6px 5px 18px; margin-top: 31px; display: flex; gap: 9px; align-items: center; border: 1px solid #dedbd4; border-radius: 8px; background: white; box-shadow: 0 8px 25px #24201608; }
-.hero-search .search-icon { font-size: 25px; transform: rotate(-20deg); color: #77766f; }
+.hero-search .search-icon { display: grid; place-items: center; font-size: 21px; color: #77766f; }
 .hero-search input { min-width: 0; flex: 1; border: 0; outline: 0; color: var(--ink); font-size: 13px; }
 .hero-search input::placeholder { color: #a5a39d; }
 .hero-search .button { min-width: 110px; height: 49px; }
@@ -170,7 +172,7 @@ a { color: inherit; }
 .profile-guest { display: grid; justify-items: center; gap: 12px; padding: 42px 24px; text-align: center; }
 .profile-guest .profile-large-avatar { width: 64px; height: 64px; margin-bottom: 5px; font-size: 20px; }
 .profile-guest .button { margin-top: 8px; }
-.profile-page > .back-link { display: inline-block; }
+.profile-page > .back-link { display: inline-flex; }
 .login-page { min-height: 100vh; display: grid; grid-template-columns: minmax(400px, .92fr) 1.08fr; background: white; }
 .login-card { width: min(390px, 82%); margin: auto; padding: 55px 0; }
 .login-brand { margin-bottom: 65px; }
@@ -266,3 +268,11 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 @media (max-width: 430px) {
   .product-grid { gap: 8px; }.product-visual { height: 132px; }.product-emoji { font-size: 49px; }.popular-searches { gap: 5px; }.popular-searches button { padding: 4px 8px; }.site-footer > span:nth-child(2) { max-width: 170px; }.how-steps { grid-template-columns: 1fr; }.how-step { min-height: 125px; }.how-step h3 { margin-top: 17px; }.how-step p { max-width: none; }.sidebar-link { padding: 0 7px; font-size: 9px; }.admin-brand { margin-right: 5px; }.admin-brand .brand-mark { width: 27px; height: 27px; }.admin-brand { font-size: 14px; }.preview-button { padding: 0 7px; font-size: 9px; }.admin-topbar { font-size: 9px; }.stats-grid { grid-template-columns: 1fr; }.stat-card { min-height: 95px; }.stat-card-top { font-size: 10px; }.stat-card > strong { display: inline-block; margin-right: 8px; }.stat-detail { width: auto; display: inline-flex; gap: 8px; }.admin-page-heading h1 { font-size: 18px; }.admin-page-heading p { font-size: 9px; }.add-button { min-height: 32px; }.filter-button { display: none; }
 }
+
+/* Minimal SVG icons + soft pill back buttons */
+.icon { display: inline-block; flex-shrink: 0; vertical-align: -0.14em; }
+.back-link, .login-back { display: inline-flex; align-items: center; gap: 9px; padding: 5px 15px 5px 5px; border: 1px solid #e3e1d9; border-radius: 999px; background: #efeee8; color: #4a4943; font-size: 12px; font-weight: 500; text-decoration: none; cursor: pointer; transition: background .18s ease, border-color .18s ease, color .18s ease; }
+.back-link:hover, .login-back:hover { background: #e7e6de; border-color: #d8d6cc; color: #191918; }
+.back-link:focus-visible, .login-back:focus-visible { outline: 2px solid #191918; outline-offset: 2px; }
+.back-icon { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px #1a19120f; font-size: 14px; transition: transform .18s ease; }
+.back-link:hover .back-icon, .login-back:hover .back-icon { transform: translateX(-2px); }

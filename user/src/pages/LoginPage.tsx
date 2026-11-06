@@ -4,6 +4,7 @@ import { ZodError } from "zod";
 import { login, register } from "../api/auth.api";
 import { loginSchema, registerSchema } from "../api/schemas";
 import type { AuthUser } from "../types/models";
+import Icon from "../components/Icon";
 
 export default function LoginPage({ onCancel, onSuccess }: {
   onCancel: () => void;
@@ -68,10 +69,10 @@ export default function LoginPage({ onCancel, onSuccess }: {
           <label className="form-field"><span>รหัสผ่าน</span><input type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} minLength={8} maxLength={72} required value={password} onChange={(event) => setPassword(event.target.value)} /></label>
           {mode === "register" && <label className="form-field"><span>ยืนยันรหัสผ่าน</span><input type="password" autoComplete="new-password" minLength={8} maxLength={72} required value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} /></label>}
           {errorMessage && <div className="login-error" role="alert">{errorMessage}</div>}
-          <button className="button button-dark login-submit focus-visible:outline-2 focus-visible:outline-offset-2" disabled={isSubmitting}>{isSubmitting ? mode === "login" ? "กำลังเข้าสู่ระบบ..." : "กำลังสมัครสมาชิก..." : mode === "login" ? "เข้าสู่ระบบ" : "สมัครสมาชิก"} <span>↗</span></button>
+          <button className="button button-dark login-submit focus-visible:outline-2 focus-visible:outline-offset-2" disabled={isSubmitting}>{isSubmitting ? mode === "login" ? "กำลังเข้าสู่ระบบ..." : "กำลังสมัครสมาชิก..." : mode === "login" ? "เข้าสู่ระบบ" : "สมัครสมาชิก"} <span><Icon name="arrow-right" /></span></button>
         </form>
         <div className="auth-switch">{mode === "login" ? "ยังไม่มีบัญชี?" : "มีบัญชีอยู่แล้ว?"}<button onClick={() => changeMode(mode === "login" ? "register" : "login")}>{mode === "login" ? "สมัครสมาชิก" : "เข้าสู่ระบบ"}</button></div>
-        <button className="login-back" onClick={onCancel}>← กลับไปหน้าเว็บไซต์</button>
+        <button className="login-back" onClick={onCancel}><span className="back-icon"><Icon name="arrow-left" /></span> กลับไปหน้าเว็บไซต์</button>
       </section>
       <aside className="login-art"><span>find<br /><strong>THIS</strong></span><i>GOOD FINDS<br />GOOD PRICES.</i><div className="login-art-orbit" /></aside>
     </main>

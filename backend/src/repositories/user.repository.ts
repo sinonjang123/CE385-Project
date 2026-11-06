@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../db/prisma.js";
 import type { AppUserDto, AppUserRecord, UserProfileDto } from "../types/index.js";
 import { integerId, publicUser, toUser } from "./mappers.js";
-import { memory, memoryAvatars, memoryPasswords } from "./memoryStore.js";
+import { memory, memoryAvatars, memoryPasswords, removeMemoryUserData } from "./memoryStore.js";
 
 // The avatar can be tens of KB: only load it for the profile endpoints, not on every auth check or user list.
 const withoutAvatar = { avatarUrl: true } as const;
@@ -172,6 +172,7 @@ export async function deleteUser(id: string): Promise<boolean> {
     memory.users = memory.users.filter((item) => item.id !== id);
     memoryPasswords.delete(id);
     memoryAvatars.delete(id);
+    removeMemoryUserData(id);
     return true;
   }
   const parsedId = integerId(id);

@@ -10,13 +10,15 @@ import {
 } from "../../repositories/user.repository.js";
 import { principal, validationError } from "../../utils/http.js";
 import { changePasswordSchema, updateProfileSchema } from "../../validators/account.schema.js";
+import memberRouter from "./member.routes.js";
 
 /**
- * Signed-in user's own account: profile (display name, avatar) and password change.
+ * Signed-in user's own account: profile (display name, avatar), password change and member features.
  * Mounted at /api/account. The account id always comes from the verified token, never from the request body.
  */
 const router = express.Router();
 router.use(requireUser);
+router.use(memberRouter); // favorites, recent searches, price history
 
 router.get("/profile", async (request, response) => {
   const profile = await getUserProfile(principal(request).id);

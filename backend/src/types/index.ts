@@ -65,3 +65,14 @@ export type AppUserRecord = AppUserDto & { password_hash: string };
 
 /** The signed-in user's own profile. Never includes the password hash. */
 export type UserProfileDto = AuthPrincipal & { avatar_url: string | null };
+
+export type FavoriteDto = { product_id: string; created_at: string };
+
+export type RecentSearchDto = { id: string; keyword: string; searched_at: string };
+
+export type PriceHistoryDto = {
+  mode: "mock";
+  product_id: string;
+  days: number;
+  series: Array<{ store: StoreName; points: Array<{ date: string; price: number }> }>;
+};

@@ -33,6 +33,9 @@ const categoryReferencePrices: Record<string, number> = {
   โน้ตบุ๊ก: 40000,
   รองเท้า: 3500,
   สมาร์ทวอทช์: 10000,
+  พาวเวอร์แบงก์: 700,
+  สายชาร์จ: 400,
+  จอคอมพิวเตอร์: 9000,
 };
 
 function roundedPrice(value: number): number {

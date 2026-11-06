@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { AdminData, AppUser, Product, StoreOffer } from "../types/models";
 import { initials, money, storeClass } from "../utils/format";
 import type { DataKind, RecordToEdit } from "../types/admin";
+import Icon from "./Icon";
 
 /** Shared table used by the Users, Products and Offers admin pages. */
 export default function DataTable({ kind, data, onEdit, onDelete }: {
@@ -15,20 +16,20 @@ export default function DataTable({ kind, data, onEdit, onDelete }: {
   const filtered = rows.filter((row) => JSON.stringify(row).toLowerCase().includes(query.trim().toLowerCase()));
   return (
     <section className="admin-table-panel">
-      <div className="table-toolbar"><label className="table-search"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={kind === "offers" ? "ค้นหาจากสินค้า ร้านค้า หรือ URL" : kind === "products" ? "ค้นหาจากชื่อสินค้า แบรนด์ หรือหมวดหมู่" : "ค้นหาจากชื่อหรืออีเมล"} /></label><button className="button button-outline filter-button">☷ <span>ตัวกรอง</span></button><button className="button button-outline columns-button">☷ คอลัมน์</button></div>
+      <div className="table-toolbar"><label className="table-search"><span><Icon name="search" /></span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={kind === "offers" ? "ค้นหาจากสินค้า ร้านค้า หรือ URL" : kind === "products" ? "ค้นหาจากชื่อสินค้า แบรนด์ หรือหมวดหมู่" : "ค้นหาจากชื่อหรืออีเมล"} /></label><button className="button button-outline filter-button"><Icon name="filter" /> <span>ตัวกรอง</span></button><button className="button button-outline columns-button"><Icon name="columns" /> คอลัมน์</button></div>
       <div className="table-scroll"><table><thead><tr>{kind === "users" ? <><th><input type="checkbox" aria-label="เลือกทั้งหมด" /></th><th>ชื่อผู้ใช้</th><th>อีเมล</th><th>บทบาท</th><th>สถานะ</th><th>วันที่สมัคร</th><th></th></> : kind === "products" ? <><th><input type="checkbox" aria-label="เลือกทั้งหมด" /></th><th>สินค้า</th><th>แบรนด์</th><th>หมวดหมู่</th><th>สเปก</th><th>วันที่สร้าง</th><th></th></> : <><th><input type="checkbox" aria-label="เลือกทั้งหมด" /></th><th>product_id</th><th>ร้านค้า</th><th>price</th><th>original_price</th><th>shipping_info</th><th>updated_at</th><th></th></>}</tr></thead>
         <tbody>
           {filtered.map((row) => kind === "users" ? <UserRow key={row.id} user={row as AppUser} onEdit={() => onEdit(kind, row)} onDelete={() => onDelete(kind, row.id)} /> : kind === "products" ? <ProductRow key={row.id} product={row as Product} onEdit={() => onEdit(kind, row)} onDelete={() => onDelete(kind, row.id)} /> : <OfferRow key={row.id} offer={row as StoreOffer} products={data.products} onEdit={() => onEdit(kind, row)} onDelete={() => onDelete(kind, row.id)} />)}
         </tbody>
       </table></div>
       {filtered.length === 0 && <div className="table-empty">ไม่พบข้อมูลที่ค้นหา</div>}
-      <div className="table-footer"><span>แสดง {filtered.length} จาก {rows.length} รายการ</span><div><button disabled>← ก่อนหน้า</button><button className="current-page">1</button><button disabled>ถัดไป →</button></div></div>
+      <div className="table-footer"><span>แสดง {filtered.length} จาก {rows.length} รายการ</span><div><button disabled><Icon name="arrow-left" /> ก่อนหน้า</button><button className="current-page">1</button><button disabled>ถัดไป <Icon name="arrow-right" /></button></div></div>
     </section>
   );
 }
 
 function RowActions({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) {
-  return <div className="row-actions"><button title="แก้ไข" onClick={onEdit}>✎</button><button title="ลบ" onClick={onDelete}>⋯</button></div>;
+  return <div className="row-actions"><button title="แก้ไข" onClick={onEdit}><Icon name="edit" /></button><button title="ลบ" onClick={onDelete}><Icon name="trash" /></button></div>;
 }
 
 function UserRow({ user, onEdit, onDelete }: { user: AppUser; onEdit: () => void; onDelete: () => void }) {

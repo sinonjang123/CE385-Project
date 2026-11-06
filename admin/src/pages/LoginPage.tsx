@@ -4,6 +4,7 @@ import { ZodError } from "zod";
 import { login } from "../api/auth.api";
 import { loginSchema } from "../api/schemas";
 import type { AuthUser } from "../types/models";
+import Icon from "../components/Icon";
 
 /** Admin sign-in. No registration here: admin accounts are created by the backend bootstrap/seed only. */
 export default function LoginPage({ siteUrl, onSuccess }: {
@@ -57,9 +58,9 @@ export default function LoginPage({ siteUrl, onSuccess }: {
           <label className="form-field"><span>อีเมล</span><input type="email" autoComplete="username" required value={email} onChange={(event) => setEmail(event.target.value)} /></label>
           <label className="form-field"><span>รหัสผ่าน</span><input type="password" autoComplete="current-password" minLength={8} maxLength={72} required value={password} onChange={(event) => setPassword(event.target.value)} /></label>
           {errorMessage && <div className="login-error" role="alert">{errorMessage}</div>}
-          <button className="button button-dark login-submit" disabled={isSubmitting}>{isSubmitting ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"} <span>↗</span></button>
+          <button className="button button-dark login-submit" disabled={isSubmitting}>{isSubmitting ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"} <span><Icon name="arrow-right" /></span></button>
         </form>
-        <a className="login-back" href={siteUrl}>← กลับไปหน้าเว็บไซต์</a>
+        <a className="login-back" href={siteUrl}><span className="back-icon"><Icon name="arrow-left" /></span> กลับไปหน้าเว็บไซต์</a>
       </section>
       <aside className="login-art"><span>find<br /><strong>THIS</strong></span><i>ADMIN<br />STUDIO.</i><div className="login-art-orbit" /></aside>
     </main>
