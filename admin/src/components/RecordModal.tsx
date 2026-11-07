@@ -11,7 +11,7 @@ export default function RecordModal({ kind, record, products, onClose, onSave }:
   onSave: (kind: DataKind, record: RecordToEdit, isNew: boolean) => void;
 }) {
   const title = `${record ? "แก้ไข" : "เพิ่ม"}${kind === "users" ? "ผู้ใช้" : kind === "products" ? "สินค้า" : "ข้อเสนอราคา"}`;
-  const [form, setForm] = useState<Record<string, string>>(() => record ? Object.fromEntries(Object.entries(record).map(([key, value]) => [key, String(value)])) : {});
+  const [form, setForm] = useState<Record<string, string>>(() => record ? Object.fromEntries(Object.entries(record).map(([key, value]) => [key, value === null ? "" : String(value)])) : {});
   const set = (key: string, value: string) => setForm((current) => ({ ...current, [key]: value }));
   if (kind === "users" && !record) return null;
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -26,7 +26,7 @@ export default function RecordModal({ kind, record, products, onClose, onSave }:
       onSave(kind, { id: form.id || newId("p"), name: form.name ?? "", brand: form.brand ?? "", category: (form.category || "เมาส์") as Category, description: form.description ?? "", image_url: form.image_url ?? "", emoji: form.emoji || "📦", specs: (form.specs ?? "").split(",").map((item) => item.trim()).filter(Boolean), created_at: form.created_at || new Date().toISOString().slice(0, 10) }, !record);
       return;
     }
-    onSave(kind, { id: form.id || newId("o"), product_id: form.product_id || products[0]?.id || "", store: (form.store || "Shopee") as StoreOffer["store"], price: Number(form.price || 0), original_price: Number(form.original_price || form.price || 0), shipping_info: form.shipping_info ?? "ส่งฟรี", product_url: form.product_url || "#", updated_at: form.updated_at || "วันนี้" }, !record);
+    onSave(kind, { id: form.id || newId("o"), product_id: form.product_id || products[0]?.id || "", store: (form.store || "Shopee") as StoreOffer["store"], price: Number(form.price || 0), original_price: Number(form.original_price || form.price || 0), shipping_info: form.shipping_info ?? "ส่งฟรี", product_url: form.product_url || "#", updated_at: form.updated_at || "วันนี้", in_stock: form.in_stock !== "false", promo_ends_at: form.promo_ends_at || null, promo_ended: false }, !record);
   };
   return <div className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section className="record-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div className="modal-heading"><div><div className="eyebrow"><span className="eyebrow-dot" /> ADMIN DATA</div><h2 id="modal-title">{title}</h2></div><button className="modal-close" onClick={onClose} aria-label="ปิด">×</button></div>
     <form onSubmit={submit}><div className="form-grid">
@@ -50,6 +50,8 @@ export default function RecordModal({ kind, record, products, onClose, onSave }:
         <FormField label="ราคาปกติ (บาท)"><input type="number" min="0" step="0.01" value={form.original_price ?? ""} onChange={(event) => set("original_price", event.target.value)} /></FormField>
         <FormField label="ข้อมูลจัดส่ง"><input value={form.shipping_info ?? "ส่งฟรี"} onChange={(event) => set("shipping_info", event.target.value)} /></FormField>
         <FormField label="Product URL"><input value={form.product_url ?? ""} onChange={(event) => set("product_url", event.target.value)} placeholder="https://..." /></FormField>
+        <FormField label="สถานะสินค้า"><select value={form.in_stock === "false" ? "false" : "true"} onChange={(event) => set("in_stock", event.target.value)}><option value="true">มีสินค้า</option><option value="false">สินค้าหมด</option></select></FormField>
+        <FormField label="โปรโมชั่นสิ้นสุดวันที่ (ไม่บังคับ)"><input type="date" value={form.promo_ends_at ?? ""} onChange={(event) => set("promo_ends_at", event.target.value)} /><small className="field-hint">หลังวันนี้ระบบจะถือว่าหมดโปรโมชั่น และหน้าเว็บแสดงราคาปกติ</small></FormField>
       </>}
     </div><div className="modal-footer"><span>บันทึกผ่าน API {kind === "users" ? "ข้อมูลผู้ใช้" : "ข้อมูลร้านค้า"}</span><button type="button" className="button button-outline" onClick={onClose}>ยกเลิก</button><button className="button button-dark" type="submit">บันทึกข้อมูล</button></div></form>
   </section></div>;

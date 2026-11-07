@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { CatalogData } from "../types/models";
-import { money, storeClass, storeMark } from "../utils/format";
+import { dateTime, money, storeClass, storeMark } from "../utils/format";
 import Icon from "../components/Icon";
+import OfferStatusBadge from "../components/OfferStatusBadge";
 
 const retailerReferences = [
   { name: "Shopee", url: "https://shopee.co.th/", description: "ตลาดออนไลน์และร้านค้าหลากหลายหมวดหมู่" },
@@ -30,7 +31,7 @@ export default function PriceSourcesPage({ data, onCompare }: { data: CatalogDat
           const storeOffers = data.offers.filter((offer) => {
             const product = data.products.find((item) => item.id === offer.product_id);
             return offer.store === store.name && `${product?.name ?? ""} ${store.name}`.toLowerCase().includes(query.trim().toLowerCase());
-          }).sort((a, b) => a.price - b.price);
+          }).sort((a, b) => Number(b.in_stock) - Number(a.in_stock) || a.price - b.price);
           return (
             <section className="retailer-card" key={store.name}>
               <div className="retailer-header">
@@ -41,7 +42,7 @@ export default function PriceSourcesPage({ data, onCompare }: { data: CatalogDat
               {storeOffers.length ? <div className="retailer-offers">{storeOffers.map((offer) => {
                 const product = data.products.find((item) => item.id === offer.product_id);
                 if (!product) return null;
-                return <button className="retailer-offer" key={offer.id} onClick={() => onCompare(product.id)}><span className="retailer-product-icon">{product.emoji}</span><span className="retailer-product-name">{product.name}<small>{offer.shipping_info} · อัปเดต {offer.updated_at}</small></span><strong>{money(offer.price)}</strong><span className="retailer-arrow"><Icon name="arrow-right" /></span></button>;
+                return <button className={`retailer-offer ${offer.in_stock ? "" : "out-of-stock"}`} key={offer.id} onClick={() => onCompare(product.id)}><span className="retailer-product-icon">{product.emoji}</span><span className="retailer-product-name">{product.name}<small>{offer.shipping_info} · อัปเดต {dateTime(offer.updated_at)}</small><OfferStatusBadge offer={offer} /></span><strong>{money(offer.price)}</strong><span className="retailer-arrow"><Icon name="arrow-right" /></span></button>;
               })}</div> : <p className="retailer-empty">ไม่มีรายการสินค้าที่ตรงกับคำค้น</p>}
               <div className="retailer-footer">{storeOffers.length} ราคาอ้างอิง <span>ข้อมูลจำลอง</span></div>
             </section>

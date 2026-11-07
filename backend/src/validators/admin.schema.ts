@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { emailSchema } from "./common.schema.js";
+import { dateOnlySchema, emailSchema } from "./common.schema.js";
 
 export const storeSchema = z.enum(["Shopee", "Lazada", "Amazon"]);
 
@@ -22,6 +22,9 @@ export const offerSchema = z.object({
   original_price: z.number().finite().nonnegative().max(99_999_999.99),
   shipping_info: z.string().max(255).default(""),
   product_url: z.string().max(500).refine((value) => value === "#" || value.startsWith("https://") || value.startsWith("http://"), "ลิงก์สินค้าต้องเป็น HTTP(S)").default("#"),
+  in_stock: z.boolean().default(true),
+  // promo_ended is computed by the backend and is ignored if a client sends it.
+  promo_ends_at: dateOnlySchema.nullable().default(null),
 }).refine((offer) => offer.original_price >= offer.price, {
   message: "ราคาปกติต้องมากกว่าหรือเท่ากับราคาปัจจุบัน",
   path: ["original_price"],

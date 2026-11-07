@@ -25,24 +25,20 @@ export default function AdminLayout({ activePage, data, adminUser, demoMode, onP
     <div className="admin-shell">
       <aside className="admin-sidebar">
         <button className="brand-lockup admin-brand" onClick={onExit}><span className="brand-mark">f.</span><span>find <strong>THIS</strong><small>ADMIN STUDIO</small></span></button>
-        <label className="sidebar-search"><span><Icon name="search" /></span><input placeholder="ค้นหาเมนู..." /></label>
         <div className="sidebar-label">WORKSPACE</div>
         <button className={`sidebar-link ${activePage === "overview" ? "selected" : ""}`} onClick={() => onPageChange("overview")}><span><Icon name="grid" /></span> Dashboard</button>
         <button className={`sidebar-link ${activePage === "users" ? "selected" : ""}`} onClick={() => onPageChange("users")}><span><Icon name="user" /></span> App Users <b>{data.users.length}</b></button>
         <div className="sidebar-label data-label">DATA <span>⌄</span></div>
         <button className={`sidebar-link nested ${activePage === "products" ? "selected" : ""}`} onClick={() => onPageChange("products")}><span><Icon name="box" /></span> Product <b>{data.products.length}</b></button>
         <button className={`sidebar-link nested ${activePage === "offers" ? "selected" : ""}`} onClick={() => onPageChange("offers")}><span><Icon name="tag" /></span> StoreOffer <b>{data.offers.length}</b></button>
-        <div className="sidebar-label">MANAGE</div>
-        <button className="sidebar-link muted-link"><span><Icon name="chart" /></span> Analytics <small>เร็ว ๆ นี้</small></button>
-        <button className="sidebar-link muted-link"><span>◎</span> Settings</button>
-        <div className="sidebar-profile"><div className="profile-avatar">{avatar}</div><div><strong>{adminUser.display_name}</strong><span>ผู้ดูแลระบบ</span></div><span className="profile-menu">···</span></div>
+        <div className="sidebar-profile"><div className="profile-avatar">{avatar}</div><div><strong>{adminUser.display_name}</strong><span>ผู้ดูแลระบบ</span></div></div>
       </aside>
       <div className="admin-main">
         <header className="admin-topbar">
           <div><span className="admin-breadcrumb">Workspace</span><span className="crumb-divider">/</span><strong>{pageTitles[activePage]}</strong></div>
           <div className="admin-top-actions">
             <span className="demo-badge"><span /> {demoMode ? "DEMO DATA" : "POSTGRESQL"}</span>
-            <button className="button button-outline preview-button" onClick={onExit}><Icon name="external" /> ดูหน้าเว็บไซต์</button>
+            <button className="button button-outline preview-button" onClick={onExit}><Icon name="external" /> View as User</button>
             <button className="button button-outline preview-button" onClick={onLogout}>ออกจากระบบ</button>
             <div className="profile-avatar top-avatar">{avatar}</div>
           </div>

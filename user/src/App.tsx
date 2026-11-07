@@ -12,6 +12,8 @@ import LoginPage from "./pages/LoginPage";
 import PriceSourcesPage from "./pages/PriceSourcesPage";
 import ProfilePage from "./pages/ProfilePage";
 import type { AuthUser, CatalogData, Category, UserProfile } from "./types/models";
+import { openAdminDashboard } from "./utils/adminLink";
+import { lowestInStockPrice } from "./utils/offers";
 import { apiErrorMessage, isUnauthorized } from "./utils/errors";
 import { clearSession, readAuthUser, saveSession, updateSessionUser } from "./utils/session";
 
@@ -86,8 +88,10 @@ export default function App() {
   const favoriteProducts = useMemo(() => member.favoriteIds.flatMap((id) => {
     const product = catalog.products.find((item) => item.id === id);
     if (!product) return [];
-    const prices = catalog.offers.filter((offer) => offer.product_id === id).map((offer) => offer.price);
-    return [{ product, lowestPrice: prices.length ? Math.min(...prices) : null }];
+    // Favorites show the lowest price among stores that still have the product.
+    const productOffers = catalog.offers.filter((offer) => offer.product_id === id);
+    const lowestPrice = lowestInStockPrice(productOffers);
+    return [{ product, lowestPrice, soldOut: lowestPrice === null && productOffers.length > 0 }];
   }), [catalog, member.favoriteIds]);
 
   function handleProfileSaved(saved: UserProfile) {
@@ -120,11 +124,32 @@ export default function App() {
   // Sign-out buttons ask first; an expired session (401) still signs out immediately.
   const requestSignOut = () => setConfirmingLogout(true);
 
-  function handleLoginSuccess(user: AuthUser, token: string) {
+  async function handleLoginSuccess(user: AuthUser, token: string) {
+    // Admins go straight to the dashboard (the role is re-checked by the backend when the code is issued).
+    if (user.role === "admin") {
+      try {
+        await openAdminDashboard(token);
+        return;
+      } catch (error) {
+        setNotice(apiErrorMessage(error, "เปิดหน้า Dashboard ไม่สำเร็จ"));
+      }
+    }
     saveSession(user, token);
     setAuthUser(user);
     setScreen("home");
-    setNotice(`ยินดีต้อนรับ ${user.display_name}`);
+    if (user.role !== "admin") setNotice(`ยินดีต้อนรับ ${user.display_name}`);
+  }
+
+  function goToAdminDashboard() {
+    openAdminDashboard().catch((error: unknown) => {
+      if (isUnauthorized(error)) {
+        clearSession();
+        setAuthUser(null);
+        setNotice("เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่");
+        return;
+      }
+      setNotice(apiErrorMessage(error, "เปิดหน้า Dashboard ไม่สำเร็จ"));
+    });
   }
 
   if (screen === "login") {
@@ -146,6 +171,7 @@ export default function App() {
         avatarUrl={profile?.avatar_url ?? null}
         showHowItWorks={screen === "home"}
         onLogin={() => authUser ? requestSignOut() : setScreen("login")}
+        onAdminDashboard={goToAdminDashboard}
       />
       {screen === "home" ? (
         <HomePage

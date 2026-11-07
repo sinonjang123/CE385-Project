@@ -1,4 +1,13 @@
 import type { AdminData } from "../types/index.js";
+import { isPromoEnded } from "../utils/promo.js";
+
+/** Mock stock / promotion examples so both statuses show up in demo mode. */
+const demoOfferStatus: Record<string, { in_stock?: boolean; promo_ends_at?: string }> = {
+  "o-005": { in_stock: false },
+  "o-012": { promo_ends_at: "2026-11-01" },
+  "o-018": { promo_ends_at: "2026-12-31" },
+  "o-021": { in_stock: false },
+};
 
 export const demoData: AdminData = {
   products: [
@@ -35,6 +44,9 @@ export const demoData: AdminData = {
     shipping_info: String(shipping_info),
     product_url: "#",
     updated_at: "วันนี้",
+    in_stock: demoOfferStatus[String(id)]?.in_stock ?? true,
+    promo_ends_at: demoOfferStatus[String(id)]?.promo_ends_at ?? null,
+    promo_ended: isPromoEnded(demoOfferStatus[String(id)]?.promo_ends_at ?? null),
   })),
   users: [],
 };

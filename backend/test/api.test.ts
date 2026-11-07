@@ -50,13 +50,14 @@ test("registration, authorization, catalog CRUD, and admin safeguards", async ()
   assert.equal(catalogResponse.status, 200);
   const catalog = await catalogResponse.json() as {
     products: Array<{ id: string }>;
-    offers: Array<{ product_id: string; store: string; price: number }>;
+    offers: Array<{ product_id: string; store: string; price: number; promo_ended: boolean }>;
   };
   assert.equal(catalog.products.length, 11);
   for (const product of catalog.products) {
     const productOffers = catalog.offers.filter((offer) => offer.product_id === product.id);
     assert.deepEqual(productOffers.map((offer) => offer.store).sort(), ["Amazon", "Lazada", "Shopee"]);
-    const prices = productOffers.map((offer) => offer.price);
+    // An ended promotion shows the regular price (about 8% higher), so it is left out of the spread check.
+    const prices = productOffers.filter((offer) => !offer.promo_ended).map((offer) => offer.price);
     assert.ok(Math.max(...prices) - Math.min(...prices) <= Math.max(...prices) * 0.11);
   }
   assert.deepEqual(
@@ -469,4 +470,75 @@ test("admin View as User is read-only, admin-only, limited to user accounts and 
   assert.ok(audit.some((entry) => entry.action === "view" && entry.entity === "user"
     && entry.entity_id === member.user.id && entry.actor_user_id === admin.user.id));
   assert.equal(audit.filter((entry) => entry.action === "view").length, 1, "rejected views are not logged as views");
+});
+
+test("admin handoff codes are admin-only, single-use and re-checked on redeem", async () => {
+  const handoffPath = "/api/auth/admin-handoff";
+  assert.equal((await request(handoffPath, { method: "POST" })).status, 401, "requires sign-in");
+
+  const registration = await request("/api/auth/register", {
+    method: "POST",
+    body: JSON.stringify({ displayName: "Handoff Member", email: "handoff@example.test", password: "MemberPassword123" }),
+  });
+  assert.equal(registration.status, 201);
+  const member = await registration.json() as { accessToken: string };
+  assert.equal((await request(handoffPath, { method: "POST", headers: { Authorization: `Bearer ${member.accessToken}` } })).status, 403, "members cannot get a code");
+
+  const admin = await login("admin@test.findthis", "AdminPassword123");
+  const issued = await request(handoffPath, { method: "POST", headers: { Authorization: `Bearer ${admin.accessToken}` } });
+  assert.equal(issued.status, 200);
+  assert.equal(issued.headers.get("cache-control"), "no-store");
+  const { code } = await issued.json() as { code: string };
+  assert.match(code, /^[A-Za-z0-9_-]{43}$/);
+
+  const redeem = (body: unknown) => request(`${handoffPath}/redeem`, { method: "POST", body: JSON.stringify(body) });
+  const redeemed = await redeem({ code });
+  assert.equal(redeemed.status, 200);
+  const session = await redeemed.json() as { accessToken: string; user: { id: string; role: string } };
+  assert.equal(session.user.id, admin.user.id);
+  assert.equal(session.user.role, "admin");
+  assert.equal((await request("/api/admin/data", { headers: { Authorization: `Bearer ${session.accessToken}` } })).status, 200);
+
+  assert.equal((await redeem({ code })).status, 401, "a code works only once");
+  assert.equal((await redeem({ code: "x".repeat(43) })).status, 401, "unknown codes are rejected");
+  assert.equal((await redeem({ code: "short" })).status, 400, "malformed codes fail validation");
+  assert.equal((await redeem({ code, role: "admin" })).status, 400, "extra fields are rejected");
+});
+
+test("offers carry stock and promotion status; an ended promotion shows the regular price", async () => {
+  type Offer = { id: string; product_id: string; store: string; price: number; original_price: number; in_stock: boolean; promo_ends_at: string | null; promo_ended: boolean };
+  const catalog = await (await request("/api/catalog")).json() as { offers: Offer[] };
+  const find = (productId: string, store: string) => catalog.offers.find((offer) => offer.product_id === productId && offer.store === store);
+
+  // Demo examples: o-005 (p-002 Lazada) out of stock, o-012 (p-005 Lazada) promotion ended on 2026-11-01.
+  assert.equal(find("p-002", "Lazada")?.in_stock, false);
+  assert.equal(find("p-002", "Shopee")?.in_stock, true);
+  const ended = find("p-005", "Lazada");
+  assert.equal(ended?.promo_ended, true);
+  assert.equal(ended?.price, ended?.original_price, "no discount after the promotion ends");
+
+  const admin = await login("admin@test.findthis", "AdminPassword123");
+  const headers = { Authorization: `Bearer ${admin.accessToken}` };
+  const base = { product_id: "p-003", store: "Amazon", price: 3000, original_price: 3990, shipping_info: "ส่งฟรี", product_url: "#" };
+  const save = (body: unknown) => request("/api/admin/offers", { method: "POST", headers, body: JSON.stringify(body) });
+
+  const defaults = await (await save(base)).json() as Offer;
+  assert.equal(defaults.in_stock, true);
+  assert.equal(defaults.promo_ends_at, null);
+  assert.equal(defaults.promo_ended, false);
+
+  const ignoredClientFlag = await (await save({ ...base, in_stock: false, promo_ends_at: "2099-12-31", promo_ended: true })).json() as Offer;
+  assert.equal(ignoredClientFlag.in_stock, false);
+  assert.equal(ignoredClientFlag.promo_ended, false, "promo_ended is computed by the backend, not taken from the client");
+
+  const past = await (await save({ ...base, promo_ends_at: "2020-01-31" })).json() as Offer;
+  assert.equal(past.promo_ended, true);
+
+  assert.equal((await save({ ...base, promo_ends_at: "2026-02-30" })).status, 400, "impossible dates are rejected");
+  assert.equal((await save({ ...base, promo_ends_at: "31/01/2026" })).status, 400, "only YYYY-MM-DD is accepted");
+  assert.equal((await save({ ...base, in_stock: "no" })).status, 400);
+
+  const adminData = await (await request("/api/admin/data", { headers })).json() as { offers: Offer[] };
+  assert.equal(adminData.offers.find((offer) => offer.id === "o-005")?.in_stock, false);
+  assert.equal(adminData.offers.find((offer) => offer.id === "o-012")?.promo_ended, true);
 });

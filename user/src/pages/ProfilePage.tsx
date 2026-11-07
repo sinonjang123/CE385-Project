@@ -10,7 +10,8 @@ import { apiErrorMessage } from "../utils/errors";
 import { money } from "../utils/format";
 import Icon from "../components/Icon";
 
-export type FavoriteProduct = { product: Product; lowestPrice: number | null };
+/** soldOut: the product has offers, but every store is out of stock. */
+export type FavoriteProduct = { product: Product; lowestPrice: number | null; soldOut: boolean };
 
 const roleLabel = (role: AuthUser["role"]) => role === "admin" ? "ผู้ดูแลระบบ" : "ลูกค้า";
 
@@ -254,12 +255,12 @@ function FavoritesSection({ favorites, onCompare, onToggleFavorite, onHome }: {
       </div>
       {favorites.length ? (
         <ul className="favorite-list">
-          {favorites.map(({ product, lowestPrice }) => (
+          {favorites.map(({ product, lowestPrice, soldOut }) => (
             <li key={product.id}>
               <button type="button" className="favorite-item" onClick={() => onCompare(product.id)}>
                 <span className="favorite-emoji" aria-hidden="true">{product.emoji}</span>
                 <span className="favorite-copy"><strong>{product.name}</strong><small>{product.brand} · {product.category}</small></span>
-                <span className="favorite-price">{lowestPrice === null ? "ยังไม่มีราคา" : <>เริ่มต้น <b>{money(lowestPrice)}</b></>}</span>
+                <span className="favorite-price">{lowestPrice !== null ? <>เริ่มต้น <b>{money(lowestPrice)}</b></> : soldOut ? "สินค้าหมด" : "ยังไม่มีราคา"}</span>
               </button>
               <FavoriteButton active productName={product.name} onToggle={() => onToggleFavorite(product.id)} />
             </li>

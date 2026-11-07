@@ -11,3 +11,8 @@ export const registerSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
+
+/** One-time admin handoff code (base64url of 32 random bytes = 43 characters). */
+export const adminHandoffSchema = z.object({
+  code: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
+}).strict();

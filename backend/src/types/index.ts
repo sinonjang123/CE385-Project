@@ -34,6 +34,12 @@ export type StoreOfferDto = {
   shipping_info: string;
   product_url: string;
   updated_at: string;
+  /** false = สินค้าหมด at this store. */
+  in_stock: boolean;
+  /** Last day of the promotion (YYYY-MM-DD, Thailand time) or null when there is no end date. */
+  promo_ends_at: string | null;
+  /** Computed by the backend from promo_ends_at; never accepted from the client. */
+  promo_ended: boolean;
 };
 
 export type AppUserDto = {

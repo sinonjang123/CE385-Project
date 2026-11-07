@@ -75,12 +75,16 @@ for (const offer of demoData.offers) {
       originalPrice: offer.original_price,
       shippingInfo: offer.shipping_info,
       productUrl: offer.product_url,
+      inStock: offer.in_stock,
+      promoEndsAt: offer.promo_ends_at ? new Date(`${offer.promo_ends_at}T00:00:00Z`) : null,
     },
     update: {
       price: offer.price,
       originalPrice: offer.original_price,
       shippingInfo: offer.shipping_info,
       productUrl: offer.product_url,
+      inStock: offer.in_stock,
+      promoEndsAt: offer.promo_ends_at ? new Date(`${offer.promo_ends_at}T00:00:00Z`) : null,
     },
   });
 }

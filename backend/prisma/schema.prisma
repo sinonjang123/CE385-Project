@@ -62,6 +62,8 @@ model Listing {
   reviewsCount  Int           @default(0) @map("reviews_count")
   shippingInfo  String?       @map("shipping_info") @db.VarChar(255)
   productUrl    String        @map("product_url") @db.VarChar(500)
+  inStock       Boolean       @default(true) @map("in_stock")
+  promoEndsAt   DateTime?     @map("promo_ends_at") @db.Date
   updatedAt     DateTime      @default(now()) @map("updated_at") @db.Timestamptz
   product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
   store         Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)

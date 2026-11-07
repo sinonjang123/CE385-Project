@@ -44,7 +44,7 @@ export default function ViewAsUserModal({ userId, products, offers, onClose, onU
   }, [onClose]);
 
   const lowestPrice = (productId: string) => {
-    const prices = offers.filter((offer) => offer.product_id === productId).map((offer) => offer.price);
+    const prices = offers.filter((offer) => offer.product_id === productId && offer.in_stock).map((offer) => offer.price);
     return prices.length ? Math.min(...prices) : null;
   };
 

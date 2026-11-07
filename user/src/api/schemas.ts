@@ -75,6 +75,9 @@ export const offerSchema: z.ZodType<StoreOffer> = z.object({
   shipping_info: z.string(),
   product_url: z.string(),
   updated_at: z.string(),
+  in_stock: z.boolean(),
+  promo_ends_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
+  promo_ended: z.boolean(),
 });
 
 export const catalogSchema: z.ZodType<CatalogData> = z.object({

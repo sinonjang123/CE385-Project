@@ -8,6 +8,8 @@ import { apiErrorMessage } from "../utils/errors";
 import { dateTime, money, storeClass, storeMark } from "../utils/format";
 import { storeLink } from "../utils/storeLinks";
 import Icon from "../components/Icon";
+import OfferStatusBadge from "../components/OfferStatusBadge";
+import { sortOffersForDisplay } from "../utils/offers";
 
 function priceStats(offers: StoreOffer[]) {
   if (!offers.length) return null;
@@ -83,9 +85,11 @@ export default function ComparePage({ product, offers, onBack, isMember, isFavor
   onToggleFavorite: () => void;
   onLogin: () => void;
 }) {
-  const sortedOffers = [...offers].sort((a, b) => a.price - b.price);
-  const lowest = sortedOffers[0];
-  const stats = priceStats(sortedOffers);
+  const sortedOffers = sortOffersForDisplay(offers);
+  const inStockOffers = sortedOffers.filter((offer) => offer.in_stock);
+  // The best price only comes from stores that still have the product.
+  const lowest = inStockOffers[0];
+  const stats = priceStats(inStockOffers);
   return (
     <main className="compare-page">
       <div className="breadcrumbs"><button onClick={onBack}>สินค้าทั้งหมด</button><span>/</span><span>{product.category}</span><span>/</span><span>{product.name}</span></div>
@@ -100,21 +104,24 @@ export default function ComparePage({ product, offers, onBack, isMember, isFavor
           <h1>{product.name}</h1>
           <FavoriteButton className="compare-favorite" active={isFavorite} productName={product.name} onToggle={onToggleFavorite} withLabel />
           <p>{product.description}</p>
-          <div className="compare-summary"><span>ราคาดีที่สุด</span><strong>{lowest ? money(lowest.price) : "ยังไม่มีราคา"}</strong><span>จาก {lowest?.store ?? "—"}</span><span className="save-badge">{lowest ? `ประหยัด ${money(lowest.original_price - lowest.price)}` : "เพิ่มข้อเสนอในแอดมิน"}</span></div>
+          <div className="compare-summary"><span>ราคาดีที่สุด</span><strong>{lowest ? money(lowest.price) : sortedOffers.length ? "สินค้าหมด" : "ยังไม่มีราคา"}</strong><span>จาก {lowest?.store ?? "—"}</span><span className="save-badge">{lowest ? (lowest.original_price > lowest.price ? `ประหยัด ${money(lowest.original_price - lowest.price)}` : "ราคาปกติ") : sortedOffers.length ? "ทุกร้านสินค้าหมด" : "เพิ่มข้อเสนอในแอดมิน"}</span></div>
         </div>
       </section>
       <section className="offers-section">
         <div className="section-heading"><div><div className="eyebrow"><span className="eyebrow-dot" /> PRICE CHECK</div><h2>เทียบราคาทุกร้าน</h2><p>{sortedOffers.length} ข้อเสนอ · ตรวจสอบล่าสุดในวันนี้</p></div></div>
         <div className="offer-list">
-          {sortedOffers.length ? sortedOffers.map((offer, index) => (
-            <article className={`offer-row ${index === 0 ? "best-offer" : ""}`} key={offer.id}>
-              <div className="offer-rank">{index === 0 ? "BEST" : `0${index + 1}`}</div>
+          {sortedOffers.length ? sortedOffers.map((offer, index) => {
+            const isBest = offer === lowest;
+            return (
+            <article className={`offer-row ${isBest ? "best-offer" : ""} ${offer.in_stock ? "" : "out-of-stock"}`} key={offer.id}>
+              <div className="offer-rank">{isBest ? "BEST" : offer.in_stock ? `0${index + 1}` : "—"}</div>
               <div className={`store-logo store-${storeClass(offer.store)}`}>{storeMark(offer.store)}</div>
-              <div className="offer-store-copy"><strong>{offer.store}</strong><span>{offer.shipping_info} <i>·</i> {offer.updated_at} อัปเดต</span></div>
-              <div className="offer-prices"><strong>{money(offer.price)}</strong><del>{money(offer.original_price)}</del></div>
-              <OfferLink offer={offer} productName={product.name} primary={index === 0} />
+              <div className="offer-store-copy"><strong>{offer.store}</strong><span>{offer.shipping_info} <i>·</i> อัปเดต {dateTime(offer.updated_at)}</span><OfferStatusBadge offer={offer} /></div>
+              <div className="offer-prices"><strong>{money(offer.price)}</strong>{offer.original_price > offer.price && <del>{money(offer.original_price)}</del>}</div>
+              <OfferLink offer={offer} productName={product.name} primary={isBest} />
             </article>
-          )) : <div className="no-results">ยังไม่มีข้อเสนอสำหรับสินค้านี้ เพิ่มข้อมูลได้จากหน้าจัดการระบบ</div>}
+            );
+          }) : <div className="no-results">ยังไม่มีข้อเสนอสำหรับสินค้านี้ เพิ่มข้อมูลได้จากหน้าจัดการระบบ</div>}
         </div>
         {sortedOffers.length > 0 && <p className="offer-link-note">ปุ่ม "ค้นหาใน…" จะเปิดหน้าค้นหาสินค้าบนเว็บร้านค้า ราคาที่แสดงบน find THIS เป็นข้อมูลจำลอง โปรดตรวจสอบราคาจริงที่ร้านค้า</p>}
       </section>

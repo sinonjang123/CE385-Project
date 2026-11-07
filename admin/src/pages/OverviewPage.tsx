@@ -27,7 +27,8 @@ export default function OverviewPage({ data, audit, auditError, onPageChange, on
   const activeUsers = data.users.filter((user) => user.status === "active").length;
   const today = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "2-digit" }).toUpperCase();
 
-  const discounts = data.offers.filter((offer) => offer.original_price > offer.price)
+  // Only live promotions count: no discount applies once a promotion ends or the store is out of stock.
+  const discounts = data.offers.filter((offer) => offer.in_stock && !offer.promo_ended && offer.original_price > offer.price)
     .map((offer) => (offer.original_price - offer.price) / offer.original_price);
   const averageDiscount = discounts.length ? Math.round((discounts.reduce((sum, value) => sum + value, 0) / discounts.length) * 100) : 0;
 
@@ -40,13 +41,15 @@ export default function OverviewPage({ data, audit, auditError, onPageChange, on
   const cheapestWins = stores.map((store) => ({
     store,
     wins: data.products.filter((product) => {
-      const productOffers = data.offers.filter((offer) => offer.product_id === product.id);
+      const productOffers = data.offers.filter((offer) => offer.product_id === product.id && offer.in_stock);
       if (!productOffers.length) return false;
       const lowest = Math.min(...productOffers.map((offer) => offer.price));
       return productOffers.some((offer) => offer.store === store && offer.price === lowest);
     }).length,
   }));
   const maxWins = Math.max(1, ...cheapestWins.map((item) => item.wins));
+  const outOfStock = data.offers.filter((offer) => !offer.in_stock).length;
+  const promoEnded = data.offers.filter((offer) => offer.in_stock && offer.promo_ended).length;
 
   const newestUsers = [...data.users].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 5);
   const userName = (id: string | null) => data.users.find((user) => user.id === id)?.display_name ?? (id ? `ผู้ใช้ #${id}` : "ระบบ");
@@ -60,7 +63,7 @@ export default function OverviewPage({ data, audit, auditError, onPageChange, on
 
       <div className="stats-grid dashboard-stats">
         <StatCard label="สินค้าทั้งหมด" value={data.products.length.toString().padStart(2, "0")} icon={<Icon name="box" />} detail="รายการในแค็ตตาล็อก" onClick={() => onPageChange("products")} />
-        <StatCard label="ข้อเสนอราคา" value={data.offers.length.toString().padStart(2, "0")} icon={<Icon name="tag" />} detail="ราคาจากร้านค้า" onClick={() => onPageChange("offers")} />
+        <StatCard label="ข้อเสนอราคา" value={data.offers.length.toString().padStart(2, "0")} icon={<Icon name="tag" />} detail={`สินค้าหมด ${outOfStock} · หมดโปร ${promoEnded}`} onClick={() => onPageChange("offers")} />
         <StatCard label="ผู้ใช้งาน" value={data.users.length.toString().padStart(2, "0")} icon={<Icon name="user" />} detail={`${activeUsers} บัญชีกำลังใช้งาน`} onClick={() => onPageChange("users")} />
         <StatCard label="ส่วนลดเฉลี่ย" value={`${averageDiscount}%`} icon={<Icon name="chart" />} detail="เทียบราคาเต็ม" onClick={() => onPageChange("offers")} />
       </div>
@@ -75,7 +78,7 @@ export default function OverviewPage({ data, audit, auditError, onPageChange, on
           </ul>
         </section>
         <section className="admin-panel">
-          <div className="panel-heading"><div><h3>ร้านที่ให้ราคาต่ำสุด</h3><p>จำนวนสินค้าที่แต่ละร้านถูกที่สุด (รวมราคาเท่ากัน)</p></div><button onClick={() => onPageChange("offers")}>ดูราคา <Icon name="arrow-right" /></button></div>
+          <div className="panel-heading"><div><h3>ร้านที่ให้ราคาต่ำสุด</h3><p>จำนวนสินค้าที่แต่ละร้านถูกที่สุด (รวมราคาเท่ากัน ไม่นับร้านที่สินค้าหมด)</p></div><button onClick={() => onPageChange("offers")}>ดูราคา <Icon name="arrow-right" /></button></div>
           <ul className="bar-list store-bars">
             {cheapestWins.map(({ store, wins }) => (
               <li key={store}><span className={`store-pill store-pill-${storeClass(store)}`}>{store}</span><div className="bar-track"><i className={`bar-${storeClass(store)}`} style={{ width: `${(wins / maxWins) * 100}%` }} /></div><b>{wins}</b></li>

@@ -2,6 +2,7 @@ import FavoriteButton from "../components/FavoriteButton";
 import HeroMouse from "../components/HeroMouse";
 import type { Category, Product, RecentSearch, StoreOffer } from "../types/models";
 import { categories, money } from "../utils/format";
+import { lowestInStockPrice } from "../utils/offers";
 import Icon from "../components/Icon";
 
 export default function HomePage({
@@ -79,7 +80,7 @@ export default function HomePage({
           <div className="product-grid">
             {products.map((product, index) => {
               const productOffers = offers.filter((offer) => offer.product_id === product.id);
-              const lowPrice = Math.min(...productOffers.map((offer) => offer.price));
+              const lowPrice = lowestInStockPrice(productOffers);
               return (
                 <article className="product-card" key={product.id}>
                   <FavoriteButton className="product-favorite" active={favoriteIds.includes(product.id)} productName={product.name} onToggle={() => onToggleFavorite(product.id)} />
@@ -92,7 +93,7 @@ export default function HomePage({
                   <div className="product-info">
                     <div className="product-brand">{product.brand} <span>·</span> {product.category}</div>
                     <button className="product-name" onClick={() => onCompare(product.id)}>{product.name}</button>
-                    <div className="product-price-row"><span>เริ่มต้นที่</span><strong>{Number.isFinite(lowPrice) ? money(lowPrice) : "ยังไม่มีราคา"}</strong></div>
+                    <div className="product-price-row"><span>เริ่มต้นที่</span><strong className={lowPrice === null && productOffers.length ? "sold-out" : undefined}>{lowPrice !== null ? money(lowPrice) : productOffers.length ? "สินค้าหมด" : "ยังไม่มีราคา"}</strong></div>
                     <button className="compare-link" onClick={() => onCompare(product.id)}>เทียบราคา {productOffers.length} ร้าน <span><Icon name="arrow-right" /></span></button>
                   </div>
                 </article>

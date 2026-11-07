@@ -404,3 +404,13 @@ circle.series-shopee { fill: var(--series-shopee); } circle.series-lazada { fill
 @keyframes confirm-fade { from { opacity: 0; } }
 @keyframes confirm-rise { from { opacity: 0; transform: translateY(6px) scale(.98); } }
 @media (prefers-reduced-motion: reduce) { .confirm-backdrop, .confirm-dialog { animation: none; } }
+
+/* Offer stock / promotion status (mock data) */
+span.offer-badge { width: fit-content; padding: 3px 7px; display: inline-block; border-radius: 4px; font-size: 9px; font-weight: 600; line-height: 1.3; }
+span.offer-badge-out { background: #fbeaea; color: #a84040; }
+span.offer-badge-ended { background: #fbf2e1; color: #93691f; }
+span.offer-badge-promo { background: #eaf1fb; color: #3c64a0; }
+.offer-row.out-of-stock { background: #faf9f7; }
+.offer-row.out-of-stock .offer-prices strong, .offer-row.out-of-stock .offer-store-copy strong { color: #a3a29b; }
+.product-price-row .sold-out { color: #a84040; }
+.retailer-offer.out-of-stock strong { color: #a3a29b; text-decoration: line-through; }

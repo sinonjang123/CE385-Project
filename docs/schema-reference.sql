@@ -39,6 +39,8 @@ CREATE TABLE listings (
     reviews_count  INT NOT NULL DEFAULT 0 CHECK (reviews_count >= 0),
     shipping_info  VARCHAR(255),  
     product_url    VARCHAR(500) NOT NULL,  
+    in_stock       BOOLEAN NOT NULL DEFAULT true,   -- false = สินค้าหมดที่ร้านนี้ (ข้อมูลจำลอง)
+    promo_ends_at  DATE,                            -- วันสุดท้ายของโปรโมชั่น หลังวันนี้ถือว่าหมดโปรโมชั่น
     updated_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (product_id, store_id)
 );

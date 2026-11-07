@@ -3,6 +3,12 @@ import { fetchMockRetailerOffers } from "../services/mockRetailers.js";
 import type { AdminData, CatalogData, ProductDto, StoreOfferDto } from "../types/index.js";
 import { integerId, toOffer, toProduct, toUser } from "./mappers.js";
 import { memory, removeMemoryProductData } from "./memoryStore.js";
+import { isPromoEnded } from "../utils/promo.js";
+
+/** promo_ended depends on today's date, so it is recomputed whenever offers are read. */
+function withPromoStatus(offers: StoreOfferDto[]): StoreOfferDto[] {
+  return offers.map((offer) => ({ ...offer, promo_ended: isPromoEnded(offer.promo_ends_at) }));
+}
 
 const categoryDefaults = ["เมาส์", "คีย์บอร์ด", "หูฟัง", "โน้ตบุ๊ก", "รองเท้า", "สมาร์ทวอทช์", "พาวเวอร์แบงก์", "สายชาร์จ", "จอคอมพิวเตอร์"];
 const supportedStores = ["Shopee", "Lazada", "Amazon"];
@@ -32,7 +38,7 @@ export async function getCatalog(): Promise<CatalogData> {
     return { products, offers: fetchMockRetailerOffers(products, offers) };
   }
   const products = structuredClone(memory.products);
-  return { products, offers: fetchMockRetailerOffers(products, memory.offers) };
+  return { products, offers: fetchMockRetailerOffers(products, withPromoStatus(memory.offers)) };
 }
 
 /** Admin view: the raw stored products, offers and users. */
@@ -44,7 +50,8 @@ export async function getAdminData(): Promise<AdminData> {
     ]);
     return { products, offers, users: users.map((user) => toUser(user)) };
   }
-  return structuredClone(memory);
+  const data = structuredClone(memory);
+  return { ...data, offers: withPromoStatus(data.offers) };
 }
 
 export async function saveProduct(input: Omit<ProductDto, "id" | "created_at"> & { id?: string }): Promise<ProductDto> {
@@ -94,13 +101,13 @@ export async function deleteProduct(id: string): Promise<boolean> {
   return true;
 }
 
-export async function saveOffer(input: Omit<StoreOfferDto, "id" | "updated_at"> & { id?: string }): Promise<StoreOfferDto> {
+export async function saveOffer(input: Omit<StoreOfferDto, "id" | "updated_at" | "promo_ended"> & { id?: string }): Promise<StoreOfferDto> {
   if (!prisma) {
     if (!memory.products.some((product) => product.id === input.product_id)) {
       throw new Error("PRODUCT_NOT_FOUND");
     }
     const id = input.id || `o-${crypto.randomUUID()}`;
-    const offer: StoreOfferDto = { ...input, id, updated_at: new Date().toISOString() };
+    const offer: StoreOfferDto = { ...input, id, updated_at: new Date().toISOString(), promo_ended: isPromoEnded(input.promo_ends_at) };
     const index = memory.offers.findIndex((item) => item.id === id);
     if (index >= 0) memory.offers[index] = offer;
     else memory.offers.unshift(offer);
@@ -124,6 +131,8 @@ export async function saveOffer(input: Omit<StoreOfferDto, "id" | "updated_at"> 
     originalPrice: input.original_price,
     shippingInfo: input.shipping_info,
     productUrl: input.product_url,
+    inStock: input.in_stock,
+    promoEndsAt: input.promo_ends_at ? new Date(`${input.promo_ends_at}T00:00:00Z`) : null,
   };
   const row = await prisma.$transaction(async (transaction) => {
     const existing = id === null

@@ -32,6 +32,12 @@ export type StoreOffer = {
   shipping_info: string;
   product_url: string;
   updated_at: string;
+  /** false = สินค้าหมด at this store (mock data). */
+  in_stock: boolean;
+  /** Last day of the promotion (YYYY-MM-DD) or null. */
+  promo_ends_at: string | null;
+  /** Computed by the backend; the frontend only displays it. */
+  promo_ended: boolean;
 };
 
 export type AppUser = {

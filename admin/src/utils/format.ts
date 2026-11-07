@@ -15,3 +15,11 @@ export function storeMark(store: StoreName) {
 export function storeClass(store: StoreName) {
   return store.toLowerCase().replace(/\s+/g, "");
 }
+
+/** Thai date + time for ISO timestamps; other text (e.g. "วันนี้" in demo data) is shown as is. */
+export function dateTime(value: string) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleString("th-TH", { dateStyle: "medium", timeStyle: "short" });
+}

@@ -64,7 +64,7 @@ export function fetchMockRetailerOffers(
     if (!cached || cached.referencePrice !== referencePrice) {
       const generated = mockRetailers.map(({ name }) => {
         const price = mockPrice(referencePrice);
-        return {
+        const generatedOffer: StoreOfferDto = {
           id: `mock-${product.id}-${name.toLowerCase()}`,
           product_id: product.id,
           store: name,
@@ -73,13 +73,32 @@ export function fetchMockRetailerOffers(
           shipping_info: name === "Amazon" ? "ค่าจัดส่งจำลอง" : "ส่งฟรี (จำลอง)",
           product_url: "#",
           updated_at: new Date().toISOString(),
+          in_stock: true,
+          promo_ends_at: null,
+          promo_ended: false,
         };
+        return generatedOffer;
       });
       cached = { referencePrice, offers: generated };
       generatedOffers.set(product.id, cached);
     }
-    return cached.offers.map((offer) => ({ ...offer }));
+    return cached.offers.map((offer) => withStoredStatus(offer, productOffers.find((stored) => stored.store === offer.store)));
   });
+}
+
+/**
+ * The mock price keeps the stock and promotion status the admin set for that store.
+ * After a promotion ends the regular (original) price applies, so no discount is shown.
+ */
+function withStoredStatus(offer: StoreOfferDto, stored: StoreOfferDto | undefined): StoreOfferDto {
+  const status = {
+    in_stock: stored?.in_stock ?? true,
+    promo_ends_at: stored?.promo_ends_at ?? null,
+    promo_ended: stored?.promo_ended ?? false,
+  };
+  return status.promo_ended
+    ? { ...offer, ...status, price: offer.original_price }
+    : { ...offer, ...status };
 }
 
 export function getMockRetailerPayload(offers: StoreOfferDto[]) {

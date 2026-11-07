@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import type { AppUserDto, AppUserRecord, AuthPrincipal, ProductDto, StoreOfferDto } from "../types/index.js";
+import { isPromoEnded } from "../utils/promo.js";
 
 export function day(value: Date | string): string {
   return value instanceof Date ? value.toISOString().slice(0, 10) : value;
@@ -53,8 +54,12 @@ export function toOffer(row: {
   shippingInfo: string | null;
   productUrl: string;
   updatedAt: Date;
+  inStock: boolean;
+  promoEndsAt: Date | null;
   store: { name: string };
 }): StoreOfferDto {
+  // @db.Date comes back as UTC midnight, so the ISO date part is the stored calendar date.
+  const promoEndsAt = row.promoEndsAt ? row.promoEndsAt.toISOString().slice(0, 10) : null;
   return {
     id: String(row.id),
     product_id: String(row.productId),
@@ -64,6 +69,9 @@ export function toOffer(row: {
     shipping_info: row.shippingInfo ?? "",
     product_url: row.productUrl,
     updated_at: row.updatedAt.toISOString(),
+    in_stock: row.inStock,
+    promo_ends_at: promoEndsAt,
+    promo_ended: isPromoEnded(promoEndsAt),
   };
 }
 
