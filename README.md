@@ -19,7 +19,7 @@
 ```
 Project 385 new/
 ├── package.json         # npm workspaces: user, admin, backend
-├── docs/                # ข้อกำหนด, ERD (DDL.pgerd), PDF, SQL reference, sample-data.sql, sample-queries.sql
+├── docs/                # ข้อกำหนด, ERD (DDL.pgerd สำหรับ pgAdmin, erd.svg / erd.png สำหรับสไลด์ ตรงกับฐานข้อมูลปัจจุบัน), PDF, SQL reference, sample-data.sql, sample-queries.sql
 │
 ├── user/                # ── เว็บผู้ใช้  http://localhost:5173 ──
 │   └── src/

@@ -1,0 +1,349 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1580" height="930" viewBox="0 0 1580 930" font-family="'Sarabun','Noto Sans Thai','Leelawadee UI','Segoe UI',Tahoma,sans-serif">
+<rect width="100%" height="100%" fill="#fbfbf9"/>
+<text x="40" y="50" font-size="28" font-weight="700" fill="#22221f">find THIS — ER Diagram</text>
+<text x="40" y="78" font-size="14" fill="#6f6e67">PostgreSQL · 10 ตาราง · สร้างจากโครงสร้างฐานข้อมูลจริง (หลัง migration listing_stock_promo) · 2026-11-07</text>
+<polyline points="380,157 400,157 400,235 420,235" fill="none" stroke="#7d7c75" stroke-width="1.6"/>
+<line x1="389" y1="164" x2="389" y2="150" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="394" y1="164" x2="394" y2="150" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="406" y1="235" x2="420" y2="227" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="406" y1="235" x2="420" y2="235" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="406" y1="235" x2="420" y2="243" stroke="#4a4944" stroke-width="1.6"/>
+<circle cx="399" cy="235" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<polyline points="380,529 400,529 400,529 420,529" fill="none" stroke="#7d7c75" stroke-width="1.6"/>
+<line x1="389" y1="536" x2="389" y2="522" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="394" y1="536" x2="394" y2="522" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="406" y1="529" x2="420" y2="521" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="406" y1="529" x2="420" y2="529" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="406" y1="529" x2="420" y2="537" stroke="#4a4944" stroke-width="1.6"/>
+<circle cx="399" cy="529" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<polyline points="590,352 590,424" fill="none" stroke="#7d7c75" stroke-width="1.6"/>
+<line x1="583" y1="361" x2="597" y2="361" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="583" y1="366" x2="597" y2="366" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="590" y1="410" x2="598" y2="424" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="590" y1="410" x2="590" y2="424" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="590" y1="410" x2="582" y2="424" stroke="#4a4944" stroke-width="1.6"/>
+<circle cx="590" cy="403" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<polyline points="760,157 780,157 780,183 800,183" fill="none" stroke="#7d7c75" stroke-width="1.6"/>
+<line x1="769" y1="164" x2="769" y2="150" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="774" y1="164" x2="774" y2="150" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="786" y1="183" x2="800" y2="175" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="786" y1="183" x2="800" y2="183" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="786" y1="183" x2="800" y2="191" stroke="#4a4944" stroke-width="1.6"/>
+<circle cx="779" cy="183" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<polyline points="760,157 780,157 780,399 800,399" fill="none" stroke="#7d7c75" stroke-width="1.6"/>
+<line x1="769" y1="164" x2="769" y2="150" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="774" y1="164" x2="774" y2="150" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="786" y1="399" x2="800" y2="391" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="786" y1="399" x2="800" y2="399" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="786" y1="399" x2="800" y2="407" stroke="#4a4944" stroke-width="1.6"/>
+<circle cx="779" cy="399" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<polyline points="760,477 780,477 780,603 800,603" fill="none" stroke="#7d7c75" stroke-width="1.6"/>
+<line x1="769" y1="484" x2="769" y2="470" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="774" y1="484" x2="774" y2="470" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="786" y1="603" x2="800" y2="595" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="786" y1="603" x2="800" y2="603" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="786" y1="603" x2="800" y2="611" stroke="#4a4944" stroke-width="1.6"/>
+<circle cx="779" cy="603" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<polyline points="1180,157 1160,157 1160,373 1140,373" fill="none" stroke="#7d7c75" stroke-width="1.6"/>
+<line x1="1171" y1="150" x2="1171" y2="164" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="1166" y1="150" x2="1166" y2="164" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="1154" y1="373" x2="1140" y2="381" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="1154" y1="373" x2="1140" y2="373" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="1154" y1="373" x2="1140" y2="365" stroke="#4a4944" stroke-width="1.6"/>
+<circle cx="1161" cy="373" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<polyline points="1350,352 1350,404" fill="none" stroke="#7d7c75" stroke-width="1.6"/>
+<line x1="1343" y1="361" x2="1357" y2="361" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="1343" y1="366" x2="1357" y2="366" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="1350" y1="390" x2="1358" y2="404" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="1350" y1="390" x2="1350" y2="404" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="1350" y1="390" x2="1342" y2="404" stroke="#4a4944" stroke-width="1.6"/>
+<circle cx="1350" cy="383" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<polyline points="1520,157 1548,157 1548,673 1520,673" fill="none" stroke="#7d7c75" stroke-width="1.6" stroke-dasharray="6 4"/>
+<line x1="1529" y1="164" x2="1529" y2="150" stroke="#4a4944" stroke-width="1.8"/>
+<circle cx="1537" cy="157" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="1534" y1="673" x2="1520" y2="681" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="1534" y1="673" x2="1520" y2="673" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="1534" y1="673" x2="1520" y2="665" stroke="#4a4944" stroke-width="1.6"/>
+<circle cx="1541" cy="673" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<g>
+<rect x="42" y="107" width="340" height="92" rx="8" fill="#00000012"/>
+<rect x="40" y="104" width="340" height="92" rx="8" fill="#ffffff" stroke="#d9d7d0"/>
+<path d="M40 112 a8 8 0 0 1 8 -8 h324 a8 8 0 0 1 8 8 v32 h-340 z" fill="#5f7d2e"/>
+<text x="54" y="130" font-size="16" font-weight="700" fill="#ffffff">categories</text>
+<rect x="50" y="150" width="26" height="15" rx="3" fill="#22221f"/>
+<text x="63" y="161" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">PK</text>
+<text x="84" y="162" font-size="13" font-weight="700" fill="#2c2b27">id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="368" y="162" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="41" y="170" width="338" height="26" fill="#f1f5e8" opacity="0.55"/>
+<rect x="50" y="176" width="26" height="15" rx="3" fill="#8a897f"/>
+<text x="63" y="187" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">UQ</text>
+<text x="84" y="188" font-size="13" font-weight="500" fill="#2c2b27">name<tspan fill="#b15d3d"> *</tspan></text>
+<text x="368" y="188" font-size="12" fill="#86857d" text-anchor="end">varchar(100)</text>
+</g>
+<g>
+<rect x="42" y="479" width="340" height="170" rx="8" fill="#00000012"/>
+<rect x="40" y="476" width="340" height="170" rx="8" fill="#ffffff" stroke="#d9d7d0"/>
+<path d="M40 484 a8 8 0 0 1 8 -8 h324 a8 8 0 0 1 8 8 v32 h-340 z" fill="#3b5f99"/>
+<text x="54" y="502" font-size="16" font-weight="700" fill="#ffffff">stores</text>
+<rect x="50" y="522" width="26" height="15" rx="3" fill="#22221f"/>
+<text x="63" y="533" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">PK</text>
+<text x="84" y="534" font-size="13" font-weight="700" fill="#2c2b27">id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="368" y="534" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="41" y="542" width="338" height="26" fill="#ebf0f8" opacity="0.55"/>
+<rect x="50" y="548" width="26" height="15" rx="3" fill="#8a897f"/>
+<text x="63" y="559" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">UQ</text>
+<text x="84" y="560" font-size="13" font-weight="500" fill="#2c2b27">name<tspan fill="#b15d3d"> *</tspan></text>
+<text x="368" y="560" font-size="12" fill="#86857d" text-anchor="end">varchar(100)</text>
+<text x="84" y="586" font-size="13" font-weight="500" fill="#2c2b27">base_url<tspan fill="#b15d3d"> *</tspan></text>
+<text x="368" y="586" font-size="12" fill="#86857d" text-anchor="end">varchar(255)</text>
+<rect x="41" y="594" width="338" height="26" fill="#ebf0f8" opacity="0.55"/>
+<text x="84" y="612" font-size="13" font-weight="500" fill="#2c2b27">affiliate_param</text>
+<text x="368" y="612" font-size="12" fill="#86857d" text-anchor="end">varchar(50)</text>
+<text x="84" y="638" font-size="13" font-weight="500" fill="#2c2b27">affiliate_id</text>
+<text x="368" y="638" font-size="12" fill="#86857d" text-anchor="end">varchar(100)</text>
+</g>
+<g>
+<rect x="422" y="107" width="340" height="248" rx="8" fill="#00000012"/>
+<rect x="420" y="104" width="340" height="248" rx="8" fill="#ffffff" stroke="#d9d7d0"/>
+<path d="M420 112 a8 8 0 0 1 8 -8 h324 a8 8 0 0 1 8 8 v32 h-340 z" fill="#5f7d2e"/>
+<text x="434" y="130" font-size="16" font-weight="700" fill="#ffffff">products</text>
+<rect x="430" y="150" width="26" height="15" rx="3" fill="#22221f"/>
+<text x="443" y="161" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">PK</text>
+<text x="464" y="162" font-size="13" font-weight="700" fill="#2c2b27">id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="162" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="421" y="170" width="338" height="26" fill="#f1f5e8" opacity="0.55"/>
+<text x="464" y="188" font-size="13" font-weight="500" fill="#2c2b27">name<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="188" font-size="12" fill="#86857d" text-anchor="end">varchar(200)</text>
+<text x="464" y="214" font-size="13" font-weight="500" fill="#2c2b27">brand<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="214" font-size="12" fill="#86857d" text-anchor="end">varchar(100)</text>
+<rect x="421" y="222" width="338" height="26" fill="#f1f5e8" opacity="0.55"/>
+<rect x="430" y="228" width="26" height="15" rx="3" fill="#5f7d2e"/>
+<text x="443" y="239" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">FK</text>
+<text x="464" y="240" font-size="13" font-weight="500" fill="#2c2b27">category_id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="240" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<text x="464" y="266" font-size="13" font-weight="500" fill="#2c2b27">description</text>
+<text x="748" y="266" font-size="12" fill="#86857d" text-anchor="end">text</text>
+<rect x="421" y="274" width="338" height="26" fill="#f1f5e8" opacity="0.55"/>
+<text x="464" y="292" font-size="13" font-weight="500" fill="#2c2b27">image_url</text>
+<text x="748" y="292" font-size="12" fill="#86857d" text-anchor="end">varchar(500)</text>
+<text x="464" y="318" font-size="13" font-weight="500" fill="#2c2b27">emoji</text>
+<text x="748" y="318" font-size="12" fill="#86857d" text-anchor="end">varchar(20)</text>
+<rect x="421" y="326" width="338" height="26" fill="#f1f5e8" opacity="0.55"/>
+<text x="464" y="344" font-size="13" font-weight="500" fill="#2c2b27">created_at<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="344" font-size="12" fill="#86857d" text-anchor="end">timestamptz</text>
+</g>
+<g>
+<rect x="422" y="427" width="340" height="352" rx="8" fill="#00000012"/>
+<rect x="420" y="424" width="340" height="352" rx="8" fill="#ffffff" stroke="#d9d7d0"/>
+<path d="M420 432 a8 8 0 0 1 8 -8 h324 a8 8 0 0 1 8 8 v32 h-340 z" fill="#3b5f99"/>
+<text x="434" y="450" font-size="16" font-weight="700" fill="#ffffff">listings</text>
+<rect x="430" y="470" width="26" height="15" rx="3" fill="#22221f"/>
+<text x="443" y="481" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">PK</text>
+<text x="464" y="482" font-size="13" font-weight="700" fill="#2c2b27">id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="482" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="421" y="490" width="338" height="26" fill="#ebf0f8" opacity="0.55"/>
+<rect x="430" y="496" width="26" height="15" rx="3" fill="#3b5f99"/>
+<text x="443" y="507" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">FK</text>
+<text x="464" y="508" font-size="13" font-weight="500" fill="#2c2b27">product_id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="508" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="430" y="522" width="26" height="15" rx="3" fill="#3b5f99"/>
+<text x="443" y="533" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">FK</text>
+<text x="464" y="534" font-size="13" font-weight="500" fill="#2c2b27">store_id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="534" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="421" y="542" width="338" height="26" fill="#ebf0f8" opacity="0.55"/>
+<text x="464" y="560" font-size="13" font-weight="500" fill="#2c2b27">price<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="560" font-size="12" fill="#86857d" text-anchor="end">numeric(10,2)</text>
+<text x="464" y="586" font-size="13" font-weight="500" fill="#2c2b27">original_price</text>
+<text x="748" y="586" font-size="12" fill="#86857d" text-anchor="end">numeric(10,2)</text>
+<rect x="421" y="594" width="338" height="26" fill="#ebf0f8" opacity="0.55"/>
+<text x="464" y="612" font-size="13" font-weight="500" fill="#2c2b27">rating</text>
+<text x="748" y="612" font-size="12" fill="#86857d" text-anchor="end">numeric(2,1)</text>
+<text x="464" y="638" font-size="13" font-weight="500" fill="#2c2b27">reviews_count<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="638" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="421" y="646" width="338" height="26" fill="#ebf0f8" opacity="0.55"/>
+<text x="464" y="664" font-size="13" font-weight="500" fill="#2c2b27">shipping_info</text>
+<text x="748" y="664" font-size="12" fill="#86857d" text-anchor="end">varchar(255)</text>
+<text x="464" y="690" font-size="13" font-weight="500" fill="#2c2b27">product_url<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="690" font-size="12" fill="#86857d" text-anchor="end">varchar(500)</text>
+<rect x="421" y="698" width="338" height="26" fill="#ebf0f8" opacity="0.55"/>
+<text x="464" y="716" font-size="13" font-weight="500" fill="#2c2b27">updated_at<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="716" font-size="12" fill="#86857d" text-anchor="end">timestamptz</text>
+<rect x="421" y="724" width="338" height="26" fill="#fff6cc"/>
+<text x="464" y="742" font-size="13" font-weight="500" fill="#2c2b27">in_stock<tspan fill="#b15d3d"> *</tspan></text>
+<text x="748" y="742" font-size="12" fill="#86857d" text-anchor="end">boolean</text>
+<rect x="421" y="750" width="338" height="26" fill="#fff6cc"/>
+<text x="464" y="768" font-size="13" font-weight="500" fill="#2c2b27">promo_ends_at</text>
+<text x="748" y="768" font-size="12" fill="#86857d" text-anchor="end">date</text>
+</g>
+<g>
+<rect x="802" y="107" width="340" height="144" rx="8" fill="#00000012"/>
+<rect x="800" y="104" width="340" height="144" rx="8" fill="#ffffff" stroke="#d9d7d0"/>
+<path d="M800 112 a8 8 0 0 1 8 -8 h324 a8 8 0 0 1 8 8 v32 h-340 z" fill="#5f7d2e"/>
+<text x="814" y="130" font-size="16" font-weight="700" fill="#ffffff">product_specs</text>
+<rect x="810" y="150" width="26" height="15" rx="3" fill="#22221f"/>
+<text x="823" y="161" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">PK</text>
+<text x="844" y="162" font-size="13" font-weight="700" fill="#2c2b27">id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="162" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="801" y="170" width="338" height="26" fill="#f1f5e8" opacity="0.55"/>
+<rect x="810" y="176" width="26" height="15" rx="3" fill="#5f7d2e"/>
+<text x="823" y="187" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">FK</text>
+<text x="844" y="188" font-size="13" font-weight="500" fill="#2c2b27">product_id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="188" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<text x="844" y="214" font-size="13" font-weight="500" fill="#2c2b27">spec_text<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="214" font-size="12" fill="#86857d" text-anchor="end">varchar(255)</text>
+<rect x="801" y="222" width="338" height="26" fill="#f1f5e8" opacity="0.55"/>
+<text x="844" y="240" font-size="13" font-weight="500" fill="#2c2b27">sort_order<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="240" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+</g>
+<g>
+<rect x="802" y="297" width="340" height="144" rx="8" fill="#00000012"/>
+<rect x="800" y="294" width="340" height="144" rx="8" fill="#ffffff" stroke="#d9d7d0"/>
+<path d="M800 302 a8 8 0 0 1 8 -8 h324 a8 8 0 0 1 8 8 v32 h-340 z" fill="#9a6b1f"/>
+<text x="814" y="320" font-size="16" font-weight="700" fill="#ffffff">favorites</text>
+<rect x="810" y="340" width="26" height="15" rx="3" fill="#22221f"/>
+<text x="823" y="351" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">PK</text>
+<text x="844" y="352" font-size="13" font-weight="700" fill="#2c2b27">id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="352" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="801" y="360" width="338" height="26" fill="#f8f1e4" opacity="0.55"/>
+<rect x="810" y="366" width="26" height="15" rx="3" fill="#9a6b1f"/>
+<text x="823" y="377" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">FK</text>
+<text x="844" y="378" font-size="13" font-weight="500" fill="#2c2b27">user_id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="378" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="810" y="392" width="26" height="15" rx="3" fill="#9a6b1f"/>
+<text x="823" y="403" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">FK</text>
+<text x="844" y="404" font-size="13" font-weight="500" fill="#2c2b27">product_id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="404" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="801" y="412" width="338" height="26" fill="#f8f1e4" opacity="0.55"/>
+<text x="844" y="430" font-size="13" font-weight="500" fill="#2c2b27">created_at<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="430" font-size="12" fill="#86857d" text-anchor="end">timestamptz</text>
+</g>
+<g>
+<rect x="802" y="527" width="340" height="144" rx="8" fill="#00000012"/>
+<rect x="800" y="524" width="340" height="144" rx="8" fill="#ffffff" stroke="#d9d7d0"/>
+<path d="M800 532 a8 8 0 0 1 8 -8 h324 a8 8 0 0 1 8 8 v32 h-340 z" fill="#3b5f99"/>
+<text x="814" y="550" font-size="16" font-weight="700" fill="#ffffff">price_history</text>
+<rect x="810" y="570" width="26" height="15" rx="3" fill="#22221f"/>
+<text x="823" y="581" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">PK</text>
+<text x="844" y="582" font-size="13" font-weight="700" fill="#2c2b27">id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="582" font-size="12" fill="#86857d" text-anchor="end">bigint</text>
+<rect x="801" y="590" width="338" height="26" fill="#ebf0f8" opacity="0.55"/>
+<rect x="810" y="596" width="26" height="15" rx="3" fill="#3b5f99"/>
+<text x="823" y="607" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">FK</text>
+<text x="844" y="608" font-size="13" font-weight="500" fill="#2c2b27">listing_id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="608" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<text x="844" y="634" font-size="13" font-weight="500" fill="#2c2b27">price<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="634" font-size="12" fill="#86857d" text-anchor="end">numeric(10,2)</text>
+<rect x="801" y="642" width="338" height="26" fill="#ebf0f8" opacity="0.55"/>
+<text x="844" y="660" font-size="13" font-weight="500" fill="#2c2b27">recorded_at<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1128" y="660" font-size="12" fill="#86857d" text-anchor="end">timestamptz</text>
+</g>
+<g>
+<rect x="1182" y="107" width="340" height="248" rx="8" fill="#00000012"/>
+<rect x="1180" y="104" width="340" height="248" rx="8" fill="#ffffff" stroke="#d9d7d0"/>
+<path d="M1180 112 a8 8 0 0 1 8 -8 h324 a8 8 0 0 1 8 8 v32 h-340 z" fill="#9a6b1f"/>
+<text x="1194" y="130" font-size="16" font-weight="700" fill="#ffffff">users</text>
+<rect x="1190" y="150" width="26" height="15" rx="3" fill="#22221f"/>
+<text x="1203" y="161" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">PK</text>
+<text x="1224" y="162" font-size="13" font-weight="700" fill="#2c2b27">id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="162" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="1181" y="170" width="338" height="26" fill="#f8f1e4" opacity="0.55"/>
+<rect x="1190" y="176" width="26" height="15" rx="3" fill="#8a897f"/>
+<text x="1203" y="187" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">UQ</text>
+<text x="1224" y="188" font-size="13" font-weight="500" fill="#2c2b27">email<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="188" font-size="12" fill="#86857d" text-anchor="end">varchar(255)</text>
+<text x="1224" y="214" font-size="13" font-weight="500" fill="#2c2b27">password_hash<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="214" font-size="12" fill="#86857d" text-anchor="end">varchar(255)</text>
+<rect x="1181" y="222" width="338" height="26" fill="#f8f1e4" opacity="0.55"/>
+<text x="1224" y="240" font-size="13" font-weight="500" fill="#2c2b27">display_name</text>
+<text x="1508" y="240" font-size="12" fill="#86857d" text-anchor="end">varchar(100)</text>
+<text x="1224" y="266" font-size="13" font-weight="500" fill="#2c2b27">role<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="266" font-size="12" fill="#86857d" text-anchor="end">varchar(20)</text>
+<rect x="1181" y="274" width="338" height="26" fill="#f8f1e4" opacity="0.55"/>
+<text x="1224" y="292" font-size="13" font-weight="500" fill="#2c2b27">status<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="292" font-size="12" fill="#86857d" text-anchor="end">varchar(20)</text>
+<text x="1224" y="318" font-size="13" font-weight="500" fill="#2c2b27">created_at<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="318" font-size="12" fill="#86857d" text-anchor="end">timestamptz</text>
+<rect x="1181" y="326" width="338" height="26" fill="#f8f1e4" opacity="0.55"/>
+<text x="1224" y="344" font-size="13" font-weight="500" fill="#2c2b27">avatar_url</text>
+<text x="1508" y="344" font-size="12" fill="#86857d" text-anchor="end">text</text>
+</g>
+<g>
+<rect x="1182" y="407" width="340" height="144" rx="8" fill="#00000012"/>
+<rect x="1180" y="404" width="340" height="144" rx="8" fill="#ffffff" stroke="#d9d7d0"/>
+<path d="M1180 412 a8 8 0 0 1 8 -8 h324 a8 8 0 0 1 8 8 v32 h-340 z" fill="#9a6b1f"/>
+<text x="1194" y="430" font-size="16" font-weight="700" fill="#ffffff">search_history</text>
+<rect x="1190" y="450" width="26" height="15" rx="3" fill="#22221f"/>
+<text x="1203" y="461" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">PK</text>
+<text x="1224" y="462" font-size="13" font-weight="700" fill="#2c2b27">id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="462" font-size="12" fill="#86857d" text-anchor="end">bigint</text>
+<rect x="1181" y="470" width="338" height="26" fill="#f8f1e4" opacity="0.55"/>
+<rect x="1190" y="476" width="26" height="15" rx="3" fill="#9a6b1f"/>
+<text x="1203" y="487" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">FK</text>
+<text x="1224" y="488" font-size="13" font-weight="500" fill="#2c2b27">user_id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="488" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<text x="1224" y="514" font-size="13" font-weight="500" fill="#2c2b27">keyword<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="514" font-size="12" fill="#86857d" text-anchor="end">varchar(255)</text>
+<rect x="1181" y="522" width="338" height="26" fill="#f8f1e4" opacity="0.55"/>
+<text x="1224" y="540" font-size="13" font-weight="500" fill="#2c2b27">searched_at<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="540" font-size="12" fill="#86857d" text-anchor="end">timestamptz</text>
+</g>
+<g>
+<rect x="1182" y="597" width="340" height="196" rx="8" fill="#00000012"/>
+<rect x="1180" y="594" width="340" height="196" rx="8" fill="#ffffff" stroke="#d9d7d0"/>
+<path d="M1180 602 a8 8 0 0 1 8 -8 h324 a8 8 0 0 1 8 8 v32 h-340 z" fill="#9a6b1f"/>
+<text x="1194" y="620" font-size="16" font-weight="700" fill="#ffffff">admin_audit_logs</text>
+<rect x="1190" y="640" width="26" height="15" rx="3" fill="#22221f"/>
+<text x="1203" y="651" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">PK</text>
+<text x="1224" y="652" font-size="13" font-weight="700" fill="#2c2b27">id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="652" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<rect x="1181" y="660" width="338" height="26" fill="#f8f1e4" opacity="0.55"/>
+<rect x="1190" y="666" width="26" height="15" rx="3" fill="#9a6b1f"/>
+<text x="1203" y="677" font-size="9.5" font-weight="700" fill="#ffffff" text-anchor="middle">FK</text>
+<text x="1224" y="678" font-size="13" font-weight="500" fill="#2c2b27">actor_user_id</text>
+<text x="1508" y="678" font-size="12" fill="#86857d" text-anchor="end">integer</text>
+<text x="1224" y="704" font-size="13" font-weight="500" fill="#2c2b27">action<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="704" font-size="12" fill="#86857d" text-anchor="end">varchar(20)</text>
+<rect x="1181" y="712" width="338" height="26" fill="#f8f1e4" opacity="0.55"/>
+<text x="1224" y="730" font-size="13" font-weight="500" fill="#2c2b27">entity<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="730" font-size="12" fill="#86857d" text-anchor="end">varchar(20)</text>
+<text x="1224" y="756" font-size="13" font-weight="500" fill="#2c2b27">entity_id<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="756" font-size="12" fill="#86857d" text-anchor="end">varchar(100)</text>
+<rect x="1181" y="764" width="338" height="26" fill="#f8f1e4" opacity="0.55"/>
+<text x="1224" y="782" font-size="13" font-weight="500" fill="#2c2b27">created_at<tspan fill="#b15d3d"> *</tspan></text>
+<text x="1508" y="782" font-size="12" fill="#86857d" text-anchor="end">timestamptz</text>
+</g>
+<line x1="40" y1="826" x2="1540" y2="826" stroke="#e6e4de"/>
+<rect x="40" y="845" width="16" height="16" rx="3" fill="#5f7d2e"/>
+<text x="62" y="857" font-size="13" fill="#55544e">สินค้า</text>
+<rect x="132.4" y="845" width="16" height="16" rx="3" fill="#3b5f99"/>
+<text x="154.4" y="857" font-size="13" fill="#55544e">ราคา / ร้านค้า</text>
+<rect x="284" y="845" width="16" height="16" rx="3" fill="#9a6b1f"/>
+<text x="306" y="857" font-size="13" fill="#55544e">ผู้ใช้</text>
+<rect x="376.4" y="845" width="26" height="15" rx="3" fill="#22221f"/><text x="389.4" y="856" font-size="9.5" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+<text x="408.4" y="857" font-size="13" fill="#55544e">Primary key</text>
+<rect x="515.8" y="845" width="26" height="15" rx="3" fill="#3b5f99"/><text x="528.8" y="856" font-size="9.5" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+<text x="547.8" y="857" font-size="13" fill="#55544e">Foreign key</text>
+<rect x="655.1999999999999" y="845" width="26" height="15" rx="3" fill="#8a897f"/><text x="668.1999999999999" y="856" font-size="9.5" font-weight="700" fill="#fff" text-anchor="middle">UQ</text>
+<text x="687.1999999999999" y="857" font-size="13" fill="#55544e">Unique</text>
+<text x="757.5999999999999" y="857" font-size="13" fill="#b15d3d">*</text>
+<text x="769.5999999999999" y="857" font-size="13" fill="#55544e">NOT NULL</text>
+<rect x="854.8" y="845" width="26" height="15" rx="3" fill="#fff6cc" stroke="#e8d98a"/>
+<text x="886.8" y="857" font-size="13" fill="#55544e">เพิ่มรอบล่าสุด (สินค้าหมด / หมดโปร)</text>
+<line x1="40" y1="886" x2="120" y2="886" stroke="#7d7c75" stroke-width="1.6"/>
+<line x1="49" y1="893" x2="49" y2="879" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="54" y1="893" x2="54" y2="879" stroke="#4a4944" stroke-width="1.8"/>
+<line x1="106" y1="886" x2="120" y2="878" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="106" y1="886" x2="120" y2="886" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="106" y1="886" x2="120" y2="894" stroke="#4a4944" stroke-width="1.6"/>
+<circle cx="99" cy="886" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<text x="132" y="891" font-size="13" fill="#55544e">1 ต่อ 0..N</text>
+<line x1="232" y1="886" x2="312" y2="886" stroke="#7d7c75" stroke-width="1.6" stroke-dasharray="6 4"/>
+<line x1="241" y1="893" x2="241" y2="879" stroke="#4a4944" stroke-width="1.8"/>
+<circle cx="249" cy="886" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="298" y1="886" x2="312" y2="878" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="298" y1="886" x2="312" y2="886" stroke="#4a4944" stroke-width="1.6"/>
+<line x1="298" y1="886" x2="312" y2="894" stroke="#4a4944" stroke-width="1.6"/>
+<circle cx="291" cy="886" r="4.5" fill="#fbfbf9" stroke="#4a4944" stroke-width="1.6"/>
+<text x="324" y="891" font-size="13" fill="#55544e">FK ว่างได้ (ON DELETE SET NULL)</text>
+<text x="599.4" y="891" font-size="13" fill="#55544e">UNIQUE ร่วม: listings (product_id, store_id) · favorites (user_id, product_id)</text>
+</svg>
