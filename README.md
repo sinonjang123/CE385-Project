@@ -116,6 +116,19 @@ npm run --workspace @find-this/api db:migrate
 npm run --workspace @find-this/api db:seed
 ```
 
+### ทดสอบกับ PostgreSQL จริง (integration test)
+
+`npm test` ทดสอบในโหมด in-memory ส่วน `test/db.integration.ts` ทดสอบกับ PostgreSQL จริง (เก็บ bcrypt hash, unique index, CRUD + cascade, audit log, รายการโปรด/คำค้นแยกตามผู้ใช้) ต้องใช้**ฐานข้อมูลแยก**ที่ชื่อมีคำว่า `test` (ถ้าไม่ใช่ test จะไม่ยอมรัน) และลบแถวที่สร้างเองเมื่อจบ:
+
+```bash
+createdb findthis_test
+cd backend
+# ใช้ URL ของ findthis_test และบัญชีแอดมินทดสอบ (ค่าเดียวกับใน test file) ตอน migrate + seed
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/findthis_test?schema=public" DEMO_ADMIN_EMAIL=admin@test.findthis DEMO_ADMIN_PASSWORD=AdminPassword123 npx prisma migrate deploy
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/findthis_test?schema=public" DEMO_ADMIN_EMAIL=admin@test.findthis DEMO_ADMIN_PASSWORD=AdminPassword123 npm run db:seed
+TEST_DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/findthis_test?schema=public" npm run test:db
+```
+
 ## SQL ตัวอย่าง (งาน SQL)
 
 `docs/sample-data.sql` ใส่ข้อมูลจำลองอย่างน้อย 10 แถวทุกตาราง และ `docs/sample-queries.sql` มี query 5 ตัวที่ใช้ GROUP BY, MIN/MAX/AVG, subquery และ JOIN ร้านที่มีคำว่า "(จำลอง)" เป็นร้านสมมติสำหรับงาน SQL เท่านั้น เว็บยังแสดงแค่ Shopee, Lazada, Amazon แนะนำให้รันในฐานข้อมูลแยก:

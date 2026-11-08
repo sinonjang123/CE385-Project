@@ -76,14 +76,16 @@ export async function saveProduct(input: Omit<ProductDto, "id" | "created_at"> &
     imageUrl: input.image_url || null,
     emoji: input.emoji || null,
     categoryId: category.id,
-    specs: {
-      deleteMany: {},
-      create: input.specs.map((specText, sortOrder) => ({ specText, sortOrder })),
-    },
   };
+  const specs = input.specs.map((specText, sortOrder) => ({ specText, sortOrder }));
+  // `deleteMany` is only valid in an update; a new product has no specs to replace.
   const row = id === null
-    ? await prisma.product.create({ data, include: { category: true, specs: true } })
-    : await prisma.product.update({ where: { id }, data, include: { category: true, specs: true } });
+    ? await prisma.product.create({ data: { ...data, specs: { create: specs } }, include: { category: true, specs: true } })
+    : await prisma.product.update({
+      where: { id },
+      data: { ...data, specs: { deleteMany: {}, create: specs } },
+      include: { category: true, specs: true },
+    });
   return toProduct(row);
 }
 
